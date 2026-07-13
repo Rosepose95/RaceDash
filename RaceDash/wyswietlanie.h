@@ -9,5 +9,9 @@ class Wyswietlanie {
 
 public:
 	Wyswietlanie();
-	void rysuj(sf::RenderWindow& window, Pojazd& AktualnyStan);
+
+	void aktualizuj_ksztalt(float Radius, sf::Color FillColor, sf::Color OutlineColor, int Thickness, sf::Vector2f Origin, sf::Vector2f Position);
+	void aktualizuj_tekst(int CharacterSize, sf::Color TextColor, sf::Vector2f Position);
+	void aktualizuj_string(float wartosc);
+	void rysuj(sf::RenderWindow& window, Wyswietlanie& obiekt, float wartosc);
 };

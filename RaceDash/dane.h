@@ -34,9 +34,11 @@ public:
 
 
 	float getTempoleju() { return tempOleju;}
+	float getObroty() { return obroty; }
 	float getTempChlodnicy() { return tempChlodnicy;}
 	float getPredkosc() { return predkosc;}
 	float getBateria() { return bateria;}
+	float getCzas() { return czas; }
 
 };
 

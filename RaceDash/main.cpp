@@ -23,7 +23,14 @@ int main() {
 
 
     Pojazd AktualnyStan;
-    Wyswietlanie pulpit;
+
+    Wyswietlanie predkosc;
+    predkosc.aktualizuj_ksztalt(100, { 30,30,30 }, {0,255,0}, 15, {100.0,100.0}, {400.0,300.0});
+    predkosc.aktualizuj_tekst(70, { 0,0,0 }, { 370.0,260.0 });
+
+    Wyswietlanie obroty;
+    obroty.aktualizuj_ksztalt(65, {30,30,30}, {0,255,0}, 15, {60.0,60.0}, {200.0,150.0});
+    obroty.aktualizuj_tekst(40, { 0,0,0 }, { 160.0, 125.0 });
 
     while (window.isOpen()) {
         while (const auto event = window.pollEvent()) {
@@ -32,7 +39,6 @@ int main() {
                 window.close();
             }
         }
-
 
         if ((MoznaCzytac==true) && (zegar.getElapsedTime().asMilliseconds() >= 1000)) {
             if (odczyt(logi, AktualnyStan) == false) {                              //jesli skoncza sie dane do czytania koniec programu
@@ -45,7 +51,8 @@ int main() {
         }
 
         window.clear(sf::Color(30, 30, 30));
-        pulpit.rysuj(window, AktualnyStan);
+        predkosc.rysuj(window, predkosc, AktualnyStan.getPredkosc());
+        obroty.rysuj(window, obroty, AktualnyStan.getObroty());
         window.display();
     }
 
