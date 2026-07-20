@@ -24,6 +24,7 @@ class Ladowanie_grafik {
 	sf::Sprite lokalizacja;
 
 	float maxwartosc;
+	float minwartosc;
 	float katstartowy;
 	float katkoncowy;
 
@@ -31,7 +32,7 @@ public:
 	Ladowanie_grafik();
 
 	void aktualizuj_grafike(std::string zdjecie, sf::Vector2f pozycja);
-	void aktualizuj_katy(float mw, float ks, float kk);
+	void aktualizuj_katy(float maxw, float minw, float ks, float kk);
 	void wyliczanie_kata(float wartosc);
 	void zmiana_wielkosc(float skala);
 	void ustaw_srodek_obrotu(sf::Vector2f wspolrzedne);

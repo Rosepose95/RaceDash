@@ -78,8 +78,9 @@ void Ladowanie_grafik::aktualizuj_grafike(std::string zdjecie, sf::Vector2f pozy
 }
 
 //AKTUALIZOWSANIE WARTOSCI KATOW DLA WSKAZOWKI
-void Ladowanie_grafik::aktualizuj_katy(float mw, float ks, float kk) {
-	maxwartosc = mw;
+void Ladowanie_grafik::aktualizuj_katy(float maxw, float minw, float ks, float kk) {
+	maxwartosc = maxw;
+	minwartosc = minw;
 	katstartowy = ks;
 	katkoncowy = kk;
 }
@@ -93,8 +94,11 @@ void Ladowanie_grafik::wyliczanie_kata(float wartosc) {
 	if (wartosc < 0) {
 		wartosc = 0;
 	}
+	if (minwartosc < 0) {
+		minwartosc = 0;
+	}
 
-	float procent = wartosc / maxwartosc;
+	float procent = (wartosc - minwartosc) / (maxwartosc - minwartosc);
 	float aktualnykat = katstartowy + procent * (katkoncowy - katstartowy);
 
 	lokalizacja.setRotation(sf::degrees(aktualnykat));

@@ -28,39 +28,52 @@ int main() {
     //OBIEKT NA KTORYM DZIALAMY
     Pojazd AktualnyStan;
 
-    //WYSWITLANIE PREDKOSCI ORAZ PROSTOKATA W KTORYM JEST TEKST
-    Wyswietlanie predkosc;
-    predkosc.aktualizuj_ksztalt({20.0, 13.0}, {30,30,30}, {0,255,0}, 2, {100.0,100.0}, {595.0,510.0});
-    predkosc.aktualizuj_tekst(10, { 255,255,255 }, { 500.0, 410.0 });
-
-    //WYSWITLANIE OBROTOW ORAZ PROSTOKATA W KTORYM JEST TEKST
-    Wyswietlanie obroty;
-    obroty.aktualizuj_ksztalt({50.0, 20.0}, {30,30,30}, {0,255,0}, 2, {60.0,60.0}, {280.0,390.0});
-    obroty.aktualizuj_tekst(20, { 255, 255, 255 }, { 225.0, 325.0 });
-
     //RYSOWANIE OBROTOMIERZA
     Ladowanie_grafik obrotomierz;
-    obrotomierz.aktualizuj_grafike("obrotomierz.png", { 200.0,300.0 });
-    obrotomierz.zmiana_wielkosc(0.5);
+    obrotomierz.aktualizuj_grafike("obrotomierz.png", { 400.0,300.0 });
+    obrotomierz.zmiana_wielkosc(0.7);
 
     //RYSOWANIE WSKAZOWKI OBROTOMIERZA
     Ladowanie_grafik wskazowka_obrotomierz;
-    wskazowka_obrotomierz.aktualizuj_grafike("wskazowka.png", { 200.0,300.0 });
-    wskazowka_obrotomierz.aktualizuj_katy(8000.0, 0.0, 270.0);
+    wskazowka_obrotomierz.aktualizuj_grafike("wskazowka.png", { 400.0,300.0 });
+    wskazowka_obrotomierz.aktualizuj_katy(8000.0, 0.0, 0.0, 270.0);
     wskazowka_obrotomierz.ustaw_srodek_obrotu({ 36.0,38.0 });
-    wskazowka_obrotomierz.zmiana_wielkosc(0.4);
+    wskazowka_obrotomierz.zmiana_wielkosc(0.6);
+
+    //WYSWITLANIE OBROTOW ORAZ PROSTOKATA W KTORYM JEST TEKST
+    Wyswietlanie obroty;
+    obroty.aktualizuj_ksztalt({ 50.0, 20.0 }, { 30,30,30 }, { 0,255,0 }, 2, { 60.0,60.0 }, { 500.0,425.0 });
+    obroty.aktualizuj_tekst(20, { 255, 255, 255 }, { 450.0, 360.0 });
 
     //RYSOWANIE PREDKOSCIOMIERAZA
     Ladowanie_grafik predkosciomierz;
-    predkosciomierz.aktualizuj_grafike("predkosciomierz.png", {480.0, 300.0});
-    predkosciomierz.zmiana_wielkosc(0.2);
+    predkosciomierz.aktualizuj_grafike("predkosciomierz.png", {650.0, 300.0});
+    predkosciomierz.zmiana_wielkosc(0.45);
 
     //RYSOWANIE WSKAZOWKI PREDKOSCIOMIERAZA
     Ladowanie_grafik wskazowka_predkosciomierz;
-    wskazowka_predkosciomierz.aktualizuj_grafike("wskazowka.png", { 475.0, 310.0 });
-    wskazowka_predkosciomierz.aktualizuj_katy(240.0, 0.0, 370.0);
+    wskazowka_predkosciomierz.aktualizuj_grafike("wskazowka.png", { 675.0, 300.0 });
+    wskazowka_predkosciomierz.aktualizuj_katy(220.0, 0.0, 0.0, 340.0);
     wskazowka_predkosciomierz.ustaw_srodek_obrotu({ 36.0,38.0 });
-    wskazowka_predkosciomierz.zmiana_wielkosc(0.55);
+    wskazowka_predkosciomierz.zmiana_wielkosc(0.5);
+
+    //WYSWITLANIE PREDKOSCI ORAZ PROSTOKATA W KTORYM JEST TEKST
+    Wyswietlanie predkosc;
+    predkosc.aktualizuj_ksztalt({ 20.0, 13.0 }, { 30,30,30 }, { 0,255,0 }, 2, { 100.0,100.0 }, { 830.0,460.0 });
+    predkosc.aktualizuj_tekst(10, { 255,255,255 }, { 735.0, 360.0 });
+
+    //RYSOWANIE TEMPERATURY OLEJU
+    Ladowanie_grafik temperatura_oleju;
+    temperatura_oleju.aktualizuj_grafike("tempoleju.png", { 120.0, 300.0 });
+    temperatura_oleju.zmiana_wielkosc(0.4);
+
+    //RYSOWANIE WSKAZOWKI TEMPERATURY OLEJU
+    Ladowanie_grafik wskazowka_tempoleju;
+    wskazowka_tempoleju.aktualizuj_grafike("wskazowka.png", { 145.0, 300.0 });
+    wskazowka_tempoleju.aktualizuj_katy(150.0, 50.0, 0.0, 300.0);
+    wskazowka_tempoleju.ustaw_srodek_obrotu({ 36.0,38.0 });
+    wskazowka_tempoleju.zmiana_wielkosc(0.4);
+
 
 
 
@@ -73,15 +86,19 @@ int main() {
         }
 
         //PETLA AKTUALIZUJACA DANE AZ DO KONCA DANYCH W PLIKU
-        if ((MoznaCzytac==true) && (zegar.getElapsedTime().asMilliseconds() >= 500)) {
+        if ((MoznaCzytac==true) && (zegar.getElapsedTime().asMilliseconds() >= 100)) {
             if (odczyt(logi, AktualnyStan) == false) {                              //jesli skoncza sie dane do czytania koniec programu
                 cout << "Koniec danych" << endl;
                 MoznaCzytac = false;
             }
-
+           
+            //UAKTUALNIENIE DANYCH DLA WSKAZOWKI
             wskazowka_obrotomierz.wyliczanie_kata(AktualnyStan.getObroty());
             wskazowka_predkosciomierz.wyliczanie_kata(AktualnyStan.getPredkosc());
+            wskazowka_tempoleju.wyliczanie_kata(AktualnyStan.getTempoleju());
+       
 
+            //ZMIANA KOLORU OBRAMOWKI DLA PREDKOSCI
             if (AktualnyStan.getPredkosc() >= 0 && AktualnyStan.getPredkosc() <= 50) {
                 predkosc.zmiana_koloru_obramowki({ 0, 255, 0 });
             }
@@ -95,7 +112,7 @@ int main() {
                 predkosc.zmiana_koloru_obramowki({ 165, 0, 0 });
             }
 
-
+            //ZMIANA KOLORU OBRAMOWKI DLA OBROTOW
             if (AktualnyStan.getObroty() >= 0 && AktualnyStan.getObroty() <= 3500) {
                 obroty.zmiana_koloru_obramowki({ 0, 255, 0 });
             }
@@ -118,8 +135,13 @@ int main() {
         //WYSWIETLANIE WSZYSTKIEGO
         obrotomierz.rysuj(window);
         wskazowka_obrotomierz.rysuj(window);
+
         predkosciomierz.rysuj(window);
         wskazowka_predkosciomierz.rysuj(window);
+
+        temperatura_oleju.rysuj(window);
+        wskazowka_tempoleju.rysuj(window);
+
         predkosc.rysuj(window, predkosc, AktualnyStan.getPredkosc());
         obroty.rysuj(window, obroty, AktualnyStan.getObroty());
 
