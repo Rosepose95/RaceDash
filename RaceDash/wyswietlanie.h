@@ -11,7 +11,7 @@ class Wyswietlanie {
 public:
 	Wyswietlanie();
 
-	void aktualizuj_ksztalt(sf::Vector2f SetSize, sf::Color FillColor, sf::Color OutlineColor, int Thickness, sf::Vector2f Origin, sf::Vector2f Position);
+	void aktualizuj_prostokat(sf::Vector2f SetSize, sf::Color FillColor, sf::Color OutlineColor, int Thickness, sf::Vector2f Origin, sf::Vector2f Position);
 	void aktualizuj_tekst(int CharacterSize, sf::Color TextColor, sf::Vector2f Position);
 	void aktualizuj_string(float wartosc);
 	void zmiana_koloru_obramowki(sf::Color kolor);
@@ -38,4 +38,16 @@ public:
 	void ustaw_srodek_obrotu(sf::Vector2f wspolrzedne);
 	void rysuj(sf::RenderWindow& window);
 
+};
+
+class Proste_ksztalty {
+	sf::RectangleShape prostokat;
+	sf::CircleShape kolo;
+
+public:
+
+	void aktualizuj_prostokat(sf::Vector2f SetSize, sf::Color FillColor, sf::Color OutlineColor, int Thickness, sf::Vector2f Origin, sf::Vector2f Position);
+	void aktualizuj_kolo(int Radius, sf::Color OutlineColor, sf::Color FillColor, int Thickness, sf::Vector2f Position);
+	void zmiana_obramowki(sf::Color color);
+	void rysuj(sf::RenderWindow& window);
 };

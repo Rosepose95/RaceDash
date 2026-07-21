@@ -6,14 +6,14 @@ using namespace std;
 //WYSWIETLANIE NAPISOW ORAZ OKREGU JAKO OBRAMOWANIE
 Wyswietlanie::Wyswietlanie(): tekst(czcionka){					
 		
-	if (czcionka.openFromFile("HARLOWSI.ttf") == false) {    
+	if (czcionka.openFromFile("font/Gameplay.ttf") == false) {    
  		cout << "Blad we wczytywaniu czcionki!!!" << endl;
 		return;
 	}
 }
 
 //USTAWIANIE WARTOSCI DLA PROSTOKATA
-void Wyswietlanie::aktualizuj_ksztalt(sf::Vector2f SetSize, sf::Color FillColor, sf::Color OutlineColor, int Thickness, sf::Vector2f Origin, sf::Vector2f Position) {
+void Wyswietlanie::aktualizuj_prostokat(sf::Vector2f SetSize, sf::Color FillColor, sf::Color OutlineColor, int Thickness, sf::Vector2f Origin, sf::Vector2f Position) {
 	ksztalt.setSize(SetSize);					
 	ksztalt.setFillColor(FillColor);
 	ksztalt.setOutlineColor(OutlineColor);
@@ -54,6 +54,7 @@ void Wyswietlanie::rysuj(sf::RenderWindow& window, Wyswietlanie& obiekt, float w
 	window.draw(ksztalt);
 	window.draw(tekst);
 }
+
 
 //--------------------------------------------------------------------------------------------------------
 
@@ -119,3 +120,44 @@ void Ladowanie_grafik::rysuj(sf::RenderWindow& window) {
 	window.draw(lokalizacja);
 }
 
+//-------------------------------------------------------------------------------------------------
+
+//AKTULAZIOWANIE WARTOSCI DLA KOLA
+void Proste_ksztalty::aktualizuj_kolo(int Radius, sf::Color OutlineColor, sf::Color FillColor, int Thickness, sf::Vector2f Position) {
+
+	kolo.setRadius(Radius);
+	kolo.setOutlineColor(OutlineColor);
+	kolo.setFillColor(FillColor);
+	kolo.setOutlineThickness(Thickness);
+	sf::FloatRect wymiar = kolo.getLocalBounds();
+	kolo.setOrigin(sf::Vector2f((wymiar.position.x + wymiar.size.x)/2.0, (wymiar.position.y + wymiar.size.y)/2.0));
+	kolo.setPosition({ Position });
+
+}
+
+//AKTULAZIOWANIE WARTOSCI DLA PROSTOKATA
+void Proste_ksztalty::aktualizuj_prostokat(sf::Vector2f SetSize, sf::Color FillColor, sf::Color OutlineColor, int Thickness, sf::Vector2f Origin, sf::Vector2f Position){
+
+	prostokat.setSize(SetSize);
+	prostokat.setFillColor(FillColor);
+	prostokat.setOutlineColor(OutlineColor);
+	prostokat.setOutlineThickness(Thickness);
+	prostokat.setOrigin(Origin);
+	prostokat.setPosition(Position);
+}
+
+//ZMIANA KOLORU DLA OBRAMOWKI
+void Proste_ksztalty::zmiana_obramowki(sf::Color color) {
+
+	kolo.setOutlineColor(color);
+	prostokat.setOutlineColor(color);
+
+}
+
+//WYSWIETLANIE KOLA I PROSTOKATA
+void Proste_ksztalty::rysuj(sf::RenderWindow& window) {
+
+	window.draw(kolo);
+	window.draw(prostokat);
+
+}
