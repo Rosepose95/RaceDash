@@ -77,7 +77,7 @@ int main() {
     wskazowka_tempoleju.zmiana_wielkosc(0.4);
 
     //RYSOWANIE OBRAMOWKI OBROTOMIERZA
-    Proste_ksztalty obramowka_rpm;
+    Proste_kolo obramowka_rpm;
     obramowka_rpm.aktualizuj_kolo(140, { 0,255,0 }, {0,0,0,0}, 12, { 405.0,305.0 });
 
 
@@ -105,42 +105,49 @@ int main() {
 
             //ZMIANA KOLORU OBRAMOWKI DLA PREDKOSCI
             if (AktualnyStan.getPredkosc() >= 0 && AktualnyStan.getPredkosc() <= 50) {
-                predkosc.zmiana_koloru_obramowki({ 0, 255, 0 });
+                predkosc.plynna_zmiana_koloru(AktualnyStan.getPredkosc(), 50, 0, { 50, 205, 50 }, { 255, 255, 0 });
             }
+
             else if (AktualnyStan.getPredkosc() > 50 && AktualnyStan.getPredkosc() <= 90) {
-                predkosc.zmiana_koloru_obramowki({ 255, 165, 0 });
+                predkosc.plynna_zmiana_koloru(AktualnyStan.getPredkosc(), 90, 50, { 255, 255, 0 }, { 255, 140, 0 });
             }
+
             else if (AktualnyStan.getPredkosc() > 90 && AktualnyStan.getPredkosc() <= 140) {
-                predkosc.zmiana_koloru_obramowki({ 255, 102, 102 });
+                predkosc.plynna_zmiana_koloru(AktualnyStan.getPredkosc(), 140, 90, { 255, 140, 0 }, { 255, 20, 147 });
             }
+
             else {
-                predkosc.zmiana_koloru_obramowki({ 165, 0, 0 });
+                predkosc.plynna_zmiana_koloru(AktualnyStan.getPredkosc(), 220, 141, { 255, 0, 0 }, { 180, 0, 0 });
             }
+
 
             //ZMIANA KOLORU OBRAMOWKI DLA OBROTOW
             if (AktualnyStan.getObroty() >= 0 && AktualnyStan.getObroty() <= 3500) {
-                obroty.zmiana_koloru_obramowki({ 0, 255, 0 });
-                obramowka_rpm.zmiana_obramowki({ 0, 255, 0 });
+                obroty.plynna_zmiana_koloru(AktualnyStan.getObroty(), 3500, 0, { 50, 205, 50 }, { 255, 140, 0 });
+                obramowka_rpm.plynna_zmiana_koloru(AktualnyStan.getObroty(), 3500, 0, { 50, 205, 50 }, { 255, 140, 0 });
             }
+
             else if (AktualnyStan.getObroty() > 3500 && AktualnyStan.getObroty() <= 6000) {
-                obroty.zmiana_koloru_obramowki({ 255, 165, 0 });
-                obramowka_rpm.zmiana_obramowki({ 255, 165, 0 });
+                obroty.plynna_zmiana_koloru(AktualnyStan.getObroty(), 6000, 3500, { 255, 140, 0 }, { 255, 80, 0 });
+                obramowka_rpm.plynna_zmiana_koloru(AktualnyStan.getObroty(), 6000, 3500, { 255, 140, 0 }, { 255, 80, 0 });
             }
+
             else if (AktualnyStan.getObroty() > 6000 && AktualnyStan.getObroty() < 7000) {
-                obroty.zmiana_koloru_obramowki({ 255, 102, 102 });
-                obramowka_rpm.zmiana_obramowki({ 255, 102, 102 });
+                obroty.plynna_zmiana_koloru(AktualnyStan.getObroty(), 7000, 6000, { 255, 80, 0 }, { 255, 0, 0 });
+                obramowka_rpm.plynna_zmiana_koloru(AktualnyStan.getObroty(), 7000, 6000, { 255, 80, 0 }, { 255, 0, 0 });
             }
+
             else {
             if (AktualnyStan.getObroty() >= 7000 && AktualnyStan.getObroty() <= 8000 && zegar_dla_migania.getElapsedTime().asMilliseconds() % 500 > 250) {
-                obroty.zmiana_koloru_obramowki({ 165, 0, 0 });
-                obramowka_rpm.zmiana_obramowki({ 165, 0, 0 });
+                obroty.plynna_zmiana_koloru(AktualnyStan.getObroty(), 8000, 7000, { 255, 0, 0 }, { 255, 0, 0 });
+                obramowka_rpm.plynna_zmiana_koloru(AktualnyStan.getObroty(), 8000, 7000,{ 255, 0, 0 }, { 255, 0, 0 });
             }
+
             else {
                 obroty.zmiana_koloru_obramowki(sf::Color::Transparent);
                 obramowka_rpm.zmiana_obramowki(sf::Color::Transparent);
             }
             }
-
 
 
             zegar_dla_danych.restart();
@@ -163,7 +170,6 @@ int main() {
         obroty.rysuj(window, obroty, AktualnyStan.getObroty());
 
         obramowka_rpm.rysuj(window);
-
 
 
         window.display();

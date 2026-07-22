@@ -14,12 +14,12 @@ Wyswietlanie::Wyswietlanie(): tekst(czcionka){
 
 //USTAWIANIE WARTOSCI DLA PROSTOKATA
 void Wyswietlanie::aktualizuj_prostokat(sf::Vector2f SetSize, sf::Color FillColor, sf::Color OutlineColor, int Thickness, sf::Vector2f Origin, sf::Vector2f Position) {
-	ksztalt.setSize(SetSize);					
-	ksztalt.setFillColor(FillColor);
-	ksztalt.setOutlineColor(OutlineColor);
-	ksztalt.setOutlineThickness(Thickness);
-	ksztalt.setOrigin(Origin);
-	ksztalt.setPosition(Position);
+	prostokat.setSize(SetSize);					
+	prostokat.setFillColor(FillColor);
+	prostokat.setOutlineColor(OutlineColor);
+	prostokat.setOutlineThickness(Thickness);
+	prostokat.setOrigin(Origin);
+	prostokat.setPosition(Position);
 }
 
 //USTAWIANIE WARTOSCI DLA TEKSTU
@@ -42,8 +42,29 @@ void Wyswietlanie::aktualizuj_string(float wartosc) {
 //ZMIANA KOLORU OBRAMOWKI OD WARTOISC PREDKOSCI, OBROTOW ITD
 void Wyswietlanie::zmiana_koloru_obramowki(sf::Color kolor) {
 
-	ksztalt.setOutlineColor(kolor);
+	prostokat.setOutlineColor(kolor);
 
+}
+
+//PLYNNA ZMIANA KOLORU
+void Wyswietlanie::plynna_zmiana_koloru(float wartosc, float maxwartosc, float minwartosc, sf::Color start, sf::Color koniec) {
+
+	if (wartosc <= minwartosc) {
+		prostokat.setOutlineColor(start);
+		return;
+	}
+	if (wartosc >= maxwartosc) {
+		prostokat.setOutlineColor(koniec);
+		return;
+	}
+
+	float procent = (wartosc - minwartosc) / (maxwartosc - minwartosc);
+
+	int r = start.r + (koniec.r - start.r) * procent;
+	int g = start.g + (koniec.g - start.g) * procent;
+	int b = start.b + (koniec.b - start.b) * procent;
+
+	prostokat.setOutlineColor(sf::Color(r, g, b));
 }
 
 //RYSOWANIE WSZYSTKIEGO ORAZ AKTUALIZACJA WARTOSCI STRINGA
@@ -51,7 +72,7 @@ void Wyswietlanie::rysuj(sf::RenderWindow& window, Wyswietlanie& obiekt, float w
 
 	obiekt.aktualizuj_string(wartosc);
 
-	window.draw(ksztalt);
+	window.draw(prostokat);
 	window.draw(tekst);
 }
 
@@ -71,6 +92,7 @@ void Ladowanie_grafik::aktualizuj_grafike(std::string zdjecie, sf::Vector2f pozy
 		return;
 	}
 	tekstura.loadFromImage(obraz);
+	tekstura.setSmooth(true);
 	lokalizacja.setTexture(tekstura, true);
 
 	sf::FloatRect wymiar = lokalizacja.getLocalBounds();
@@ -123,7 +145,7 @@ void Ladowanie_grafik::rysuj(sf::RenderWindow& window) {
 //-------------------------------------------------------------------------------------------------
 
 //AKTULAZIOWANIE WARTOSCI DLA KOLA
-void Proste_ksztalty::aktualizuj_kolo(int Radius, sf::Color OutlineColor, sf::Color FillColor, int Thickness, sf::Vector2f Position) {
+void Proste_kolo::aktualizuj_kolo(int Radius, sf::Color OutlineColor, sf::Color FillColor, int Thickness, sf::Vector2f Position) {
 
 	kolo.setRadius(Radius);
 	kolo.setOutlineColor(OutlineColor);
@@ -135,29 +157,37 @@ void Proste_ksztalty::aktualizuj_kolo(int Radius, sf::Color OutlineColor, sf::Co
 
 }
 
-//AKTULAZIOWANIE WARTOSCI DLA PROSTOKATA
-void Proste_ksztalty::aktualizuj_prostokat(sf::Vector2f SetSize, sf::Color FillColor, sf::Color OutlineColor, int Thickness, sf::Vector2f Origin, sf::Vector2f Position){
-
-	prostokat.setSize(SetSize);
-	prostokat.setFillColor(FillColor);
-	prostokat.setOutlineColor(OutlineColor);
-	prostokat.setOutlineThickness(Thickness);
-	prostokat.setOrigin(Origin);
-	prostokat.setPosition(Position);
-}
-
 //ZMIANA KOLORU DLA OBRAMOWKI
-void Proste_ksztalty::zmiana_obramowki(sf::Color color) {
+void Proste_kolo::zmiana_obramowki(sf::Color color) {
 
 	kolo.setOutlineColor(color);
-	prostokat.setOutlineColor(color);
 
 }
 
-//WYSWIETLANIE KOLA I PROSTOKATA
-void Proste_ksztalty::rysuj(sf::RenderWindow& window) {
+//PLYNNA ZMIANA KOLORU
+void Proste_kolo::plynna_zmiana_koloru(float wartosc, float maxwartosc, float minwartosc, sf::Color start, sf::Color koniec) {
+
+	if (wartosc <= minwartosc) {
+		kolo.setOutlineColor(start);
+		return;
+	}
+	if (wartosc >= maxwartosc) {
+		kolo.setOutlineColor(koniec);
+		return;
+	}
+
+	float procent = (wartosc - minwartosc) / (maxwartosc - minwartosc);
+
+	int r = start.r + (koniec.r - start.r) * procent;
+	int g = start.g + (koniec.g - start.g) * procent;
+	int b = start.b + (koniec.b - start.b) * procent;
+
+	kolo.setOutlineColor(sf::Color(r, g, b));
+}
+
+//WYSWIETLANIE KOLA
+void Proste_kolo::rysuj(sf::RenderWindow& window) {
 
 	window.draw(kolo);
-	window.draw(prostokat);
 
 }

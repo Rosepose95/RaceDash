@@ -6,7 +6,7 @@
 class Wyswietlanie {
 	sf::Font czcionka;
 	sf::Text tekst;
-	sf::RectangleShape ksztalt;
+	sf::RectangleShape prostokat;
 
 public:
 	Wyswietlanie();
@@ -15,8 +15,10 @@ public:
 	void aktualizuj_tekst(int CharacterSize, sf::Color TextColor, sf::Vector2f Position);
 	void aktualizuj_string(float wartosc);
 	void zmiana_koloru_obramowki(sf::Color kolor);
+	void plynna_zmiana_koloru(float wartosc, float maxwartosc, float minwartosc, sf::Color start, sf::Color koniec);
 	void rysuj(sf::RenderWindow& window, Wyswietlanie& obiekt, float wartosc);
 };
+
 
 class Ladowanie_grafik {
 	sf::Image obraz;
@@ -40,14 +42,14 @@ public:
 
 };
 
-class Proste_ksztalty {
-	sf::RectangleShape prostokat;
+class Proste_kolo {
+
 	sf::CircleShape kolo;
 
 public:
 
-	void aktualizuj_prostokat(sf::Vector2f SetSize, sf::Color FillColor, sf::Color OutlineColor, int Thickness, sf::Vector2f Origin, sf::Vector2f Position);
 	void aktualizuj_kolo(int Radius, sf::Color OutlineColor, sf::Color FillColor, int Thickness, sf::Vector2f Position);
 	void zmiana_obramowki(sf::Color color);
+	void plynna_zmiana_koloru(float wartosc, float maxwartosc, float minwartosc, sf::Color start, sf::Color koniec);
 	void rysuj(sf::RenderWindow& window);
 };
