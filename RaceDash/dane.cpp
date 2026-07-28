@@ -9,7 +9,7 @@ using namespace std;
 bool odczyt(fstream& logi, Pojazd& AktualnyStan) {
 
 	string linia;
-	float przepisanie[6];
+	float przepisanie[7];
 
 		if (getline(logi, linia)) {
 
@@ -17,13 +17,13 @@ bool odczyt(fstream& logi, Pojazd& AktualnyStan) {
 			string wartosc;
 
 			int i = 0;
-			while (getline(strumien, wartosc, ',') && i < 6) {
+			while (getline(strumien, wartosc, ',') && i < 7) {
 				przepisanie[i] = stof(wartosc);		//przepisujemy wartosci z linijek oddzielone przecinkiem do tablicy zmieniajac string na float
 				i++;
 			}
-			AktualnyStan = Pojazd(przepisanie[0], przepisanie[1], przepisanie[2], przepisanie[3], przepisanie[4], przepisanie[5]);
+			AktualnyStan = Pojazd(przepisanie[0], przepisanie[1], przepisanie[2], przepisanie[3], przepisanie[4], przepisanie[5], przepisanie[6]);
 
-			for (int i = 0; i < 6; i++) {
+			for (int i = 0; i < 7; i++) {
 				cout << przepisanie[i] << endl;
 			}
 			return true;

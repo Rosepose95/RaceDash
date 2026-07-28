@@ -27,8 +27,6 @@ void Wyswietlanie::aktualizuj_tekst(int CharacterSize, sf::Color TextColor, sf::
 
 	tekst.setCharacterSize(CharacterSize);								
 	tekst.setFillColor(TextColor);
-	sf::FloatRect wymiary = tekst.getLocalBounds();			
-	tekst.setOrigin(sf::Vector2f((wymiary.position.x + wymiary.size.x) / 2.0, (wymiary.position.y + wymiary.size.y) / 2.0));
 	tekst.setPosition(Position);
 }
 
@@ -161,6 +159,13 @@ void Proste_kolo::aktualizuj_kolo(int Radius, sf::Color OutlineColor, sf::Color 
 void Proste_kolo::zmiana_obramowki(sf::Color color) {
 
 	kolo.setOutlineColor(color);
+
+}
+
+//ZMIANA KOLORU WYPELNIENIA
+void Proste_kolo::zmiana_wypelnienia(sf::Color color) {
+
+	kolo.setFillColor(color);
 
 }
 

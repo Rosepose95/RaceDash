@@ -1,5 +1,7 @@
 #pragma once
 #include <fstream>
+#include <string>
+using namespace std;
 
 class DaneSilnika {
 protected:
@@ -17,9 +19,10 @@ class DanePojazdu {
 protected:
 	float predkosc = 0.0;
 	float bateria = 0.0;
+	float bieg = 0.0;
 
 public:
-	DanePojazdu(float p, float b) : predkosc(p), bateria(b){}
+	DanePojazdu(float p, float b, float gear) : predkosc(p), bateria(b), bieg(gear){}
 	DanePojazdu() = default;
 
 };
@@ -29,9 +32,13 @@ class Pojazd : private DaneSilnika, private DanePojazdu {
 	float czas;
 
 public:
-	Pojazd(float t,float to, float o, float tc, float p, float b): czas(t),DaneSilnika(to,o,tc), DanePojazdu(p,b){}
+	Pojazd(float t,float to, float o, float tc, float p, float b, float gear): czas(t),DaneSilnika(to,o,tc), DanePojazdu(p,b,gear){}
 	Pojazd() = default;
 
+
+	void setTempoleju(float w) { tempOleju = w; }
+	void setPredkosc(float w) { predkosc = w; }
+	void setObroty(float w) { obroty = w; }
 
 	float getTempoleju() { return tempOleju;}
 	float getObroty() { return obroty; }
@@ -39,6 +46,7 @@ public:
 	float getPredkosc() { return predkosc;}
 	float getBateria() { return bateria;}
 	float getCzas() { return czas; }
+	float getGear() { return bieg; }
 
 };
 

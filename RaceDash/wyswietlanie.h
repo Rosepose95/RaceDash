@@ -50,6 +50,7 @@ public:
 
 	void aktualizuj_kolo(int Radius, sf::Color OutlineColor, sf::Color FillColor, int Thickness, sf::Vector2f Position);
 	void zmiana_obramowki(sf::Color color);
+	void zmiana_wypelnienia(sf::Color color);
 	void plynna_zmiana_koloru(float wartosc, float maxwartosc, float minwartosc, sf::Color start, sf::Color koniec);
 	void rysuj(sf::RenderWindow& window);
 };
