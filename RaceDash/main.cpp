@@ -85,6 +85,11 @@ int main() {
         Proste_kolo obramowka_rpm;
         obramowka_rpm.aktualizuj_kolo(140, { 0,255,0 }, { 0,0,0,0 }, 10, { 405.0,305.0 });
 
+        //RYSOWANIE RAMKI CALEGO LICZNIKA
+        Prosty_prostokat ramka;
+        ramka.aktualizuj_prostokat({800.0, 600.0}, {sf::Color::Transparent}, { 35, 35, 40 }, -5, {0.0, 0.0});
+
+
         //ALA DIODY NA GORZE EKRANU (dla oborotow)
         Proste_kolo diody[5];
         for (int i = 0; i < 5; i++) {
@@ -94,6 +99,17 @@ int main() {
         //PROGI DLA ZMIANY KOLOROW DIOD
         int wartosc_obrotow[5] = { 5000, 5500, 6000, 6500, 6900 };
         sf::Color kolory[5] = { { 50, 205, 50 }, { 255, 255, 0 }, { 255, 140, 0 }, { 255, 80, 0 }, { 255, 0, 0 } };
+
+        //WYSWIETLANIE DANYCH O BATERII
+        Wyswietlanie bateria;
+        bateria.aktualizuj_prostokat({90.0, 40.0}, {10,10,10}, {100,100,100}, 2, {30.0, 20.0}, {110.0, 540.0});
+        bateria.aktualizuj_tekst(20, { 255,255,255 }, {95.0, 530.0});
+        
+        //LADOWANIE GRAFIKI BATERII
+        Ladowanie_grafik bateria_zdj;
+        bateria_zdj.aktualizuj_grafike("grafika/car-battery.png", {40.0, 540.0});
+        bateria_zdj.zmiana_wielkosc(0.125);
+        
 
 
 
@@ -186,16 +202,19 @@ int main() {
 
             //WYSWIETLANIE WSZYSTKIEGO
             obrotomierz.rysuj(window);
-            bieg.rysuj(window, bieg, AktualnyStan.getGear());
-            obroty.rysuj(window, obroty, AktualnyStan.getObroty());
+            bieg.rysuj(window, bieg, AktualnyStan.getGear(), 0, "0");
+            obroty.rysuj(window, obroty, AktualnyStan.getObroty(), 0, "0");
             wskazowka_obrotomierz.rysuj(window);
 
             predkosciomierz.rysuj(window);
-            predkosc.rysuj(window, predkosc, AktualnyStan.getPredkosc());
+            predkosc.rysuj(window, predkosc, AktualnyStan.getPredkosc(), 0, "0");
             wskazowka_predkosciomierz.rysuj(window);
 
             temperatura_oleju.rysuj(window);
             wskazowka_tempoleju.rysuj(window);
+
+            bateria.rysuj(window, bateria, AktualnyStan.getBateria(), 2, "V");
+            bateria_zdj.rysuj(window);
 
 
             obramowka_rpm.rysuj(window);
@@ -204,6 +223,7 @@ int main() {
                 diody[i].rysuj(window);
             }
 
+            ramka.rysuj(window);
 
             window.display();
         }

@@ -13,10 +13,10 @@ public:
 
 	void aktualizuj_prostokat(sf::Vector2f SetSize, sf::Color FillColor, sf::Color OutlineColor, int Thickness, sf::Vector2f Origin, sf::Vector2f Position);
 	void aktualizuj_tekst(int CharacterSize, sf::Color TextColor, sf::Vector2f Position);
-	void aktualizuj_string(float wartosc);
+	void aktualizuj_string(float wartosc, int precyzja, string znak);
 	void zmiana_koloru_obramowki(sf::Color kolor);
 	void plynna_zmiana_koloru(float wartosc, float maxwartosc, float minwartosc, sf::Color start, sf::Color koniec);
-	void rysuj(sf::RenderWindow& window, Wyswietlanie& obiekt, float wartosc);
+	void rysuj(sf::RenderWindow& window, Wyswietlanie& obiekt, float wartosc, int precyzja, string znak);
 };
 
 
@@ -52,5 +52,15 @@ public:
 	void zmiana_obramowki(sf::Color color);
 	void zmiana_wypelnienia(sf::Color color);
 	void plynna_zmiana_koloru(float wartosc, float maxwartosc, float minwartosc, sf::Color start, sf::Color koniec);
+	void rysuj(sf::RenderWindow& window);
+};
+
+class Prosty_prostokat {
+
+	sf::RectangleShape prostokat;
+
+public:
+
+	void aktualizuj_prostokat(sf::Vector2f SetSize, sf::Color FillColor, sf::Color OutlineColor, int Thickness, sf::Vector2f Position);
 	void rysuj(sf::RenderWindow& window);
 };

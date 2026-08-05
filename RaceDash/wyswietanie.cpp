@@ -1,5 +1,6 @@
 #include <iostream>
 #include <functional>
+#include <sstream>
 #include "wyswietlanie.h"
 using namespace std;
 
@@ -31,10 +32,21 @@ void Wyswietlanie::aktualizuj_tekst(int CharacterSize, sf::Color TextColor, sf::
 }
 
 //WPISYWANIE TEKSTU DO ZMIENNEJ
-void Wyswietlanie::aktualizuj_string(float wartosc) {
+void Wyswietlanie::aktualizuj_string(float wartosc, int precyzja, string znak) {
 	
-	int metoda = static_cast<int>(wartosc);
-	tekst.setString(to_string(metoda));
+	if (precyzja == 0 && znak == "0") {
+		int metoda = static_cast<int>(wartosc);
+		tekst.setString(to_string(metoda));
+	}
+	else {
+		stringstream stream;           
+
+		stream.precision(precyzja);     
+		stream.setf(ios::fixed);   // ustawienie precyzji po przecinku 
+		stream<<wartosc;            
+
+		tekst.setString(stream.str() + znak);
+	}
 }
 
 //ZMIANA KOLORU OBRAMOWKI OD WARTOISC PREDKOSCI, OBROTOW ITD
@@ -66,9 +78,9 @@ void Wyswietlanie::plynna_zmiana_koloru(float wartosc, float maxwartosc, float m
 }
 
 //RYSOWANIE WSZYSTKIEGO ORAZ AKTUALIZACJA WARTOSCI STRINGA
-void Wyswietlanie::rysuj(sf::RenderWindow& window, Wyswietlanie& obiekt, float wartosc){
+void Wyswietlanie::rysuj(sf::RenderWindow& window, Wyswietlanie& obiekt, float wartosc, int precyzja, string znak){
 
-	obiekt.aktualizuj_string(wartosc);
+	obiekt.aktualizuj_string(wartosc, precyzja, znak);
 
 	window.draw(prostokat);
 	window.draw(tekst);
@@ -195,4 +207,21 @@ void Proste_kolo::rysuj(sf::RenderWindow& window) {
 
 	window.draw(kolo);
 
+}
+//-------------------------------------------------------------------------------------------
+
+//AKTUALIZOWANIE DANYCH PROSTOKATA
+void Prosty_prostokat::aktualizuj_prostokat(sf::Vector2f SetSize, sf::Color FillColor, sf::Color OutlineColor, int Thickness, sf::Vector2f Position) {
+
+	prostokat.setSize(SetSize);
+	prostokat.setFillColor(FillColor);
+	prostokat.setOutlineColor(OutlineColor);
+	prostokat.setOutlineThickness(Thickness);
+	prostokat.setPosition(Position);
+}
+
+
+//RYSOWANIE PRSOTKATA
+void Prosty_prostokat::rysuj(sf::RenderWindow& window) {
+	window.draw(prostokat);
 }
