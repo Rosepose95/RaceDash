@@ -102,13 +102,23 @@ int main() {
 
         //WYSWIETLANIE DANYCH O BATERII
         Wyswietlanie bateria;
-        bateria.aktualizuj_prostokat({90.0, 40.0}, {10,10,10}, {100,100,100}, 2, {30.0, 20.0}, {110.0, 540.0});
+        bateria.aktualizuj_prostokat({95.0, 40.0}, {10,10,10}, {100,100,100}, 2, {30.0, 20.0}, {110.0, 540.0});
         bateria.aktualizuj_tekst(20, { 255,255,255 }, {95.0, 530.0});
         
         //LADOWANIE GRAFIKI BATERII
         Ladowanie_grafik bateria_zdj;
         bateria_zdj.aktualizuj_grafike("grafika/car-battery.png", {40.0, 540.0});
         bateria_zdj.zmiana_wielkosc(0.125);
+
+        //WYSWIETLANIE TEMP WODY
+        Wyswietlanie woda;
+        woda.aktualizuj_prostokat({95.0, 40.0}, {10,10,10}, {100,100,100}, 2, {30.0, 20.0}, {110.0, 480.0});
+        woda.aktualizuj_tekst(20, { 255,255,255 }, {95.0, 470.0});
+
+        //LADOWANIE GRAFIKI WODY
+        Ladowanie_grafik woda_zdj;
+        woda_zdj.aktualizuj_grafike("grafika/temp-wody.png", { 40.0, 480.0 });
+        woda_zdj.zmiana_wielkosc(0.125);
         
 
 
@@ -215,6 +225,9 @@ int main() {
 
             bateria.rysuj(window, bateria, AktualnyStan.getBateria(), 2, "V");
             bateria_zdj.rysuj(window);
+
+            woda.rysuj(window, woda, AktualnyStan.getTempChlodnicy(), 2, "C");
+            woda_zdj.rysuj(window);
 
 
             obramowka_rpm.rysuj(window);
