@@ -128,11 +128,13 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="dane.cpp" />
+    <ClCompile Include="Ladowanie_grafik.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="wyswietanie.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="dane.h" />
+    <ClInclude Include="Ladowanie_grafik.h" />
     <ClInclude Include="wyswietlanie.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -4,25 +4,24 @@
 #include "dane.h"
 
 class Wyswietlanie {
-	sf::Font czcionka;
 	sf::Text tekst;
 	sf::RectangleShape prostokat;
 
+	float wczesniejsza_wartosc = 9999.0f;    //dla aktualizuj string
+
 public:
-	Wyswietlanie();
+	Wyswietlanie(sf::Font &c): tekst(c){}
 
 	void aktualizuj_prostokat(sf::Vector2f SetSize, sf::Color FillColor, sf::Color OutlineColor, int Thickness, sf::Vector2f Origin, sf::Vector2f Position);
 	void aktualizuj_tekst(int CharacterSize, sf::Color TextColor, sf::Vector2f Position);
 	void aktualizuj_string(float wartosc, int precyzja, string znak);
 	void zmiana_koloru_obramowki(sf::Color kolor);
 	void plynna_zmiana_koloru(float wartosc, float maxwartosc, float minwartosc, sf::Color start, sf::Color koniec);
-	void rysuj(sf::RenderWindow& window, Wyswietlanie& obiekt, float wartosc, int precyzja, string znak);
+	void rysuj(sf::RenderWindow& window, float wartosc, int precyzja, string znak);
 };
 
 
 class Ladowanie_grafik {
-	sf::Image obraz;
-	sf::Texture tekstura;
 	sf::Sprite lokalizacja;
 
 	float maxwartosc;
@@ -31,9 +30,9 @@ class Ladowanie_grafik {
 	float katkoncowy;
 
 public:
-	Ladowanie_grafik();
+	Ladowanie_grafik(sf::Texture& zdjecie) : lokalizacja(zdjecie){}
 
-	void aktualizuj_grafike(std::string zdjecie, sf::Vector2f pozycja);
+	void aktualizuj_polozenie(sf::Vector2f pozycja);
 	void aktualizuj_katy(float maxw, float minw, float ks, float kk);
 	void wyliczanie_kata(float wartosc);
 	void zmiana_wielkosc(float skala);
@@ -47,6 +46,7 @@ class Proste_kolo {
 	sf::CircleShape kolo;
 
 public:
+	Proste_kolo(){}
 
 	void aktualizuj_kolo(int Radius, sf::Color OutlineColor, sf::Color FillColor, int Thickness, sf::Vector2f Position);
 	void zmiana_obramowki(sf::Color color);
@@ -60,6 +60,7 @@ class Prosty_prostokat {
 	sf::RectangleShape prostokat;
 
 public:
+	Prosty_prostokat(){}
 
 	void aktualizuj_prostokat(sf::Vector2f SetSize, sf::Color FillColor, sf::Color OutlineColor, int Thickness, sf::Vector2f Position);
 	void rysuj(sf::RenderWindow& window);

@@ -1,6 +1,7 @@
 #include <SFML/Graphics.hpp>
 #include "dane.h"
 #include "wyswietlanie.h"
+#include "Ladowanie_grafik.h"
 #include <iostream>
 #include <fstream>
 #include <string>
@@ -30,54 +31,62 @@ int main() {
         //OBIEKT NA KTORYM DZIALAMY
         Pojazd AktualnyStan;
 
+        //ZALADOWANIE GRAFIK
+
+        grafiki grafika;
+        if (grafika.zaladuj_grafike() == false) {
+            cout << "Blad w plikach grafik"<<endl;
+            return 0;
+        }
+
         //RYSOWANIE OBROTOMIERZA
-        Ladowanie_grafik obrotomierz;
-        obrotomierz.aktualizuj_grafike("grafika/obrotomierz.png", { 400.0,300.0 });
+        Ladowanie_grafik obrotomierz(grafika.obrotomierz_png);
+        obrotomierz.aktualizuj_polozenie({ 400.0,300.0 });
         obrotomierz.zmiana_wielkosc(0.7);
 
         //RYSOWANIE WSKAZOWKI OBROTOMIERZA
-        Ladowanie_grafik wskazowka_obrotomierz;
-        wskazowka_obrotomierz.aktualizuj_grafike("grafika/wskazowka.png", { 400.0,300.0 });
+        Ladowanie_grafik wskazowka_obrotomierz(grafika.wskazowka_png);
+        wskazowka_obrotomierz.aktualizuj_polozenie({ 400.0,300.0 });
         wskazowka_obrotomierz.aktualizuj_katy(8000.0, 0.0, 0.0, 270.0);
         wskazowka_obrotomierz.ustaw_srodek_obrotu({ 36.0,38.0 });
         wskazowka_obrotomierz.zmiana_wielkosc(0.6);
 
         //WYSWITLANIE OBROTOW ORAZ PROSTOKATA W KTORYM JEST TEKST
-        Wyswietlanie obroty;
+        Wyswietlanie obroty(grafika.czcionka);
         obroty.aktualizuj_prostokat({ 60.0, 30.0 }, { 30,30,30 }, { 0,255,0 }, 2, {30.0 ,15.0}, { 470.0, 370.0 });
         obroty.aktualizuj_tekst(15, { 255, 255, 255 }, { 450.0, 360.0 });
 
         //RYSOWANIE PREDKOSCIOMIERAZA
-        Ladowanie_grafik predkosciomierz;
-        predkosciomierz.aktualizuj_grafike("grafika/predkosciomierz.png", { 650.0, 300.0 });
+        Ladowanie_grafik predkosciomierz(grafika.predkosciomierz_png);
+        predkosciomierz.aktualizuj_polozenie({ 650.0, 300.0 });
         predkosciomierz.zmiana_wielkosc(0.45);
 
         //RYSOWANIE WSKAZOWKI PREDKOSCIOMIERAZA
-        Ladowanie_grafik wskazowka_predkosciomierz;
-        wskazowka_predkosciomierz.aktualizuj_grafike("grafika/wskazowka.png", { 675.0, 300.0 });
+        Ladowanie_grafik wskazowka_predkosciomierz(grafika.wskazowka_png);
+        wskazowka_predkosciomierz.aktualizuj_polozenie({ 675.0, 300.0 });
         wskazowka_predkosciomierz.aktualizuj_katy(220.0, 0.0, 0.0, 340.0);
         wskazowka_predkosciomierz.ustaw_srodek_obrotu({ 36.0,38.0 });
         wskazowka_predkosciomierz.zmiana_wielkosc(0.5);
 
         //WYSWITLANIE PREDKOSCI ORAZ PROSTOKATA W KTORYM JEST TEKST
-        Wyswietlanie predkosc;
+        Wyswietlanie predkosc(grafika.czcionka);
         predkosc.aktualizuj_prostokat({ 30.0, 17.0 }, { 30,30,30 }, { 0,255,0 }, 2, {15.0, 13.5},  { 735.0, 370.0 });
         predkosc.aktualizuj_tekst(10, { 255,255,255 }, { 725.0, 360.0 });
 
         //RYSOWANIE TEMPERATURY OLEJU
-        Ladowanie_grafik temperatura_oleju;
-        temperatura_oleju.aktualizuj_grafike("grafika/tempoleju.png", { 120.0, 300.0 });
+        Ladowanie_grafik temperatura_oleju(grafika.olej_png);
+        temperatura_oleju.aktualizuj_polozenie({ 120.0, 300.0 });
         temperatura_oleju.zmiana_wielkosc(0.4);
 
         //RYSOWANIE WSKAZOWKI TEMPERATURY OLEJU
-        Ladowanie_grafik wskazowka_tempoleju;
-        wskazowka_tempoleju.aktualizuj_grafike("grafika/wskazowka.png", { 145.0, 300.0 });
+        Ladowanie_grafik wskazowka_tempoleju(grafika.wskazowka_png);
+        wskazowka_tempoleju.aktualizuj_polozenie({ 145.0, 300.0 });
         wskazowka_tempoleju.aktualizuj_katy(150.0, 50.0, 0.0, 300.0);
         wskazowka_tempoleju.ustaw_srodek_obrotu({ 36.0,38.0 });
         wskazowka_tempoleju.zmiana_wielkosc(0.4);
 
         //RYSOWANIE BIEGU ORAZ JEGO OBRAMOWKI
-        Wyswietlanie bieg;
+        Wyswietlanie bieg(grafika.czcionka);
         bieg.aktualizuj_prostokat({ 30.0, 50.0 }, { 30, 30, 30 }, { 255, 255, 255 }, 2, {15.0, 25.0}, { 400.0, 350.0 });
         bieg.aktualizuj_tekst(32, {255,255,255}, { 390.0, 330.0 });
 
@@ -101,23 +110,23 @@ int main() {
         sf::Color kolory[5] = { { 50, 205, 50 }, { 255, 255, 0 }, { 255, 140, 0 }, { 255, 80, 0 }, { 255, 0, 0 } };
 
         //WYSWIETLANIE DANYCH O BATERII
-        Wyswietlanie bateria;
-        bateria.aktualizuj_prostokat({95.0, 40.0}, {10,10,10}, {100,100,100}, 2, {30.0, 20.0}, {110.0, 540.0});
+        Wyswietlanie bateria(grafika.czcionka);
+        bateria.aktualizuj_prostokat({100.0, 40.0}, {10,10,10}, {100,100,100}, 2, {50.0, 20.0}, {130.0, 540.0});
         bateria.aktualizuj_tekst(20, { 255,255,255 }, {95.0, 530.0});
         
         //LADOWANIE GRAFIKI BATERII
-        Ladowanie_grafik bateria_zdj;
-        bateria_zdj.aktualizuj_grafike("grafika/car-battery.png", {40.0, 540.0});
+        Ladowanie_grafik bateria_zdj(grafika.bateria_png);
+        bateria_zdj.aktualizuj_polozenie({40.0, 540.0});
         bateria_zdj.zmiana_wielkosc(0.125);
 
         //WYSWIETLANIE TEMP WODY
-        Wyswietlanie woda;
-        woda.aktualizuj_prostokat({95.0, 40.0}, {10,10,10}, {100,100,100}, 2, {30.0, 20.0}, {110.0, 480.0});
+        Wyswietlanie woda(grafika.czcionka);
+        woda.aktualizuj_prostokat({100.0, 40.0}, {10,10,10}, {100,100,100}, 2, {50.0, 20.0}, {130.0, 480.0});
         woda.aktualizuj_tekst(20, { 255,255,255 }, {95.0, 470.0});
 
         //LADOWANIE GRAFIKI WODY
-        Ladowanie_grafik woda_zdj;
-        woda_zdj.aktualizuj_grafike("grafika/temp-wody.png", { 40.0, 480.0 });
+        Ladowanie_grafik woda_zdj(grafika.woda_png);
+        woda_zdj.aktualizuj_polozenie({ 40.0, 480.0 });
         woda_zdj.zmiana_wielkosc(0.125);
         
 
@@ -212,21 +221,21 @@ int main() {
 
             //WYSWIETLANIE WSZYSTKIEGO
             obrotomierz.rysuj(window);
-            bieg.rysuj(window, bieg, AktualnyStan.getGear(), 0, "0");
-            obroty.rysuj(window, obroty, AktualnyStan.getObroty(), 0, "0");
+            bieg.rysuj(window, AktualnyStan.getGear(), 0, "0");
+            obroty.rysuj(window, AktualnyStan.getObroty(), 0, "0");
             wskazowka_obrotomierz.rysuj(window);
 
             predkosciomierz.rysuj(window);
-            predkosc.rysuj(window, predkosc, AktualnyStan.getPredkosc(), 0, "0");
+            predkosc.rysuj(window, AktualnyStan.getPredkosc(), 0, "0");
             wskazowka_predkosciomierz.rysuj(window);
 
             temperatura_oleju.rysuj(window);
             wskazowka_tempoleju.rysuj(window);
 
-            bateria.rysuj(window, bateria, AktualnyStan.getBateria(), 2, "V");
+            bateria.rysuj(window, AktualnyStan.getBateria(), 2, "V");
             bateria_zdj.rysuj(window);
 
-            woda.rysuj(window, woda, AktualnyStan.getTempChlodnicy(), 2, "C");
+            woda.rysuj(window, AktualnyStan.getTempChlodnicy(), 2, "C");
             woda_zdj.rysuj(window);
 
 

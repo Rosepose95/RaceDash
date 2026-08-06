@@ -24,12 +24,18 @@
     <ClCompile Include="wyswietanie.cpp">
       <Filter>Pliki źródłowe</Filter>
     </ClCompile>
+    <ClCompile Include="Ladowanie_grafik.cpp">
+      <Filter>Pliki źródłowe</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="dane.h">
       <Filter>Pliki źródłowe</Filter>
     </ClInclude>
     <ClInclude Include="wyswietlanie.h">
+      <Filter>Pliki źródłowe</Filter>
+    </ClInclude>
+    <ClInclude Include="Ladowanie_grafik.h">
       <Filter>Pliki źródłowe</Filter>
     </ClInclude>
   </ItemGroup>

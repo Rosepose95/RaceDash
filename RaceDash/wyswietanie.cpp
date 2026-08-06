@@ -4,14 +4,6 @@
 #include "wyswietlanie.h"
 using namespace std;
 
-//WYSWIETLANIE NAPISOW ORAZ OKREGU JAKO OBRAMOWANIE
-Wyswietlanie::Wyswietlanie(): tekst(czcionka){					
-		
-	if (czcionka.openFromFile("font/Gameplay.ttf") == false) {    
- 		cout << "Blad we wczytywaniu czcionki!!!" << endl;
-		return;
-	}
-}
 
 //USTAWIANIE WARTOSCI DLA PROSTOKATA
 void Wyswietlanie::aktualizuj_prostokat(sf::Vector2f SetSize, sf::Color FillColor, sf::Color OutlineColor, int Thickness, sf::Vector2f Origin, sf::Vector2f Position) {
@@ -34,6 +26,13 @@ void Wyswietlanie::aktualizuj_tekst(int CharacterSize, sf::Color TextColor, sf::
 //WPISYWANIE TEKSTU DO ZMIENNEJ
 void Wyswietlanie::aktualizuj_string(float wartosc, int precyzja, string znak) {
 	
+	if (wartosc == wczesniejsza_wartosc) {
+		return;
+	}
+	else {
+		wczesniejsza_wartosc = wartosc;
+	}
+
 	if (precyzja == 0 && znak == "0") {
 		int metoda = static_cast<int>(wartosc);
 		tekst.setString(to_string(metoda));
@@ -78,9 +77,9 @@ void Wyswietlanie::plynna_zmiana_koloru(float wartosc, float maxwartosc, float m
 }
 
 //RYSOWANIE WSZYSTKIEGO ORAZ AKTUALIZACJA WARTOSCI STRINGA
-void Wyswietlanie::rysuj(sf::RenderWindow& window, Wyswietlanie& obiekt, float wartosc, int precyzja, string znak){
+void Wyswietlanie::rysuj(sf::RenderWindow& window, float wartosc, int precyzja, string znak){
 
-	obiekt.aktualizuj_string(wartosc, precyzja, znak);
+	aktualizuj_string(wartosc, precyzja, znak);
 
 	window.draw(prostokat);
 	window.draw(tekst);
@@ -92,18 +91,8 @@ void Wyswietlanie::rysuj(sf::RenderWindow& window, Wyswietlanie& obiekt, float w
 
 //LADOWANIE I WYSWIETLANIE GRAFIK
 
-Ladowanie_grafik::Ladowanie_grafik():  obraz(sf::Vector2u(1,1)), tekstura(sf::Vector2u(1,1)), lokalizacja(tekstura) {}
-
- //ZALADOWANIE GRAFIKI
-void Ladowanie_grafik::aktualizuj_grafike(std::string zdjecie, sf::Vector2f pozycja){
-	
-	if (obraz.loadFromFile(zdjecie) == false) {
-		cout << "Blad ladowania zdjecia!!!";
-		return;
-	}
-	tekstura.loadFromImage(obraz);
-	tekstura.setSmooth(true);
-	lokalizacja.setTexture(tekstura, true);
+ //USTALENIE LOKALIZACJI
+void Ladowanie_grafik::aktualizuj_polozenie(sf::Vector2f pozycja){
 
 	sf::FloatRect wymiar = lokalizacja.getLocalBounds();
 	lokalizacja.setOrigin(sf::Vector2f((wymiar.position.x + wymiar.size.x) / 2.0, (wymiar.position.y + wymiar.size.y) / 2.0));

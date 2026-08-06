@@ -23,9 +23,9 @@ bool odczyt(fstream& logi, Pojazd& AktualnyStan) {
 			}
 			AktualnyStan = Pojazd(przepisanie[0], przepisanie[1], przepisanie[2], przepisanie[3], przepisanie[4], przepisanie[5], przepisanie[6]);
 
-			for (int i = 0; i < 7; i++) {
-				cout << przepisanie[i] << endl;
-			}
+			//for (int i = 0; i < 7; i++) {
+				//cout << przepisanie[i] << endl;
+			//}
 			return true;
 		}
 		else {
