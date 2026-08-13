@@ -92,11 +92,15 @@ int main() {
 
         //RYSOWANIE OBRAMOWKI OBROTOMIERZA
         Proste_kolo obramowka_rpm;
-        obramowka_rpm.aktualizuj_kolo(140, { 0,255,0 }, { 0,0,0,0 }, 10, { 405.0,305.0 });
+        obramowka_rpm.aktualizuj_kolo(140, { 0,255,0 }, { 0,0,0,0 }, 12, { 405.0,305.0 });
 
-        //RYSOWANIE RAMKI CALEGO LICZNIKA
+        //RYSOWANIE OBRAMOWKI TEMP OLEJU
+        Proste_kolo obramowka_tempoleju;
+        obramowka_tempoleju.aktualizuj_kolo(105, { 0, 0, 255 }, { 0,0,0,0 }, 8, { 145.0,310.0 });
+
+        //RYSOWANIE OBRAMOWKI CALEGO OKNA
         Prosty_prostokat ramka;
-        ramka.aktualizuj_prostokat({800.0, 600.0}, {sf::Color::Transparent}, { 35, 35, 40 }, -5, {0.0, 0.0});
+        ramka.aktualizuj_prostokat({800.0, 600.0}, {sf::Color::Transparent}, {35, 35, 40}, -5, {0.0, 0.0});
 
 
         //ALA DIODY NA GORZE EKRANU (dla oborotow)
@@ -199,6 +203,25 @@ int main() {
                     }
                 }
 
+                //ZMIANA KOLORU OBRAMOWKI DLA TEMPERATURY OLEJU
+                if (AktualnyStan.getTempoleju() >= 0 && AktualnyStan.getTempoleju() < 70) {
+                    obramowka_tempoleju.plynna_zmiana_koloru(AktualnyStan.getTempoleju(), 110, 70, { 0, 0, 255}, { 0, 150, 255 });
+                }
+                else if (AktualnyStan.getTempoleju() >= 70 && AktualnyStan.getTempoleju() < 110) {
+                    obramowka_tempoleju.plynna_zmiana_koloru(AktualnyStan.getTempoleju(), 110, 70, { 0, 150, 255 }, { 50, 205, 50 });
+                }
+                else if (AktualnyStan.getTempoleju() >= 110 && AktualnyStan.getTempoleju() < 130) {
+                    obramowka_tempoleju.plynna_zmiana_koloru(AktualnyStan.getTempoleju(), 130, 110, { 50, 205, 50 }, { 255, 140, 0 });
+                }
+                else {
+                    if (AktualnyStan.getTempoleju() >= 130 && zegar_dla_migania.getElapsedTime().asMilliseconds() % 500 > 250) {
+                        obramowka_tempoleju.plynna_zmiana_koloru(AktualnyStan.getTempoleju(), 130, 110, { 255, 0, 0 }, { 255, 0, 0 });
+                    }
+                    else {
+                        obramowka_tempoleju.zmiana_obramowki(sf::Color::Transparent);
+                    }
+                }
+
                 //ZMIANA KOLOROW DIOD
                 for (int i = 0; i < 5; i++) {
                     if (AktualnyStan.getObroty() >= wartosc_obrotow[i] && AktualnyStan.getObroty() < 7000.0) {
@@ -238,7 +261,7 @@ int main() {
             woda.rysuj(window, AktualnyStan.getTempChlodnicy(), 2, "C");
             woda_zdj.rysuj(window);
 
-
+            obramowka_tempoleju.rysuj(window);
             obramowka_rpm.rysuj(window);
 
             for (int i = 0; i < 5; i++) {
