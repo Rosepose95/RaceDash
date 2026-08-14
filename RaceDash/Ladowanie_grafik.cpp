@@ -32,5 +32,8 @@ bool grafiki::zaladuj_grafike() {
     if (woda_png.loadFromFile("grafika/temp-wody.png") == false) {
         return 0;
     }
+    if (paliwo_png.loadFromFile("grafika/fuel.png")==false) {
+        return 0;
+    }
     return true;
 }

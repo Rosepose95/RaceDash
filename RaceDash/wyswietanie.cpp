@@ -209,6 +209,14 @@ void Prosty_prostokat::aktualizuj_prostokat(sf::Vector2f SetSize, sf::Color Fill
 	prostokat.setPosition(Position);
 }
 
+//OBLICZENIE POZIOMU PALIWA
+
+void Prosty_prostokat::poziom_paliwa(float max, float min, float wartosc, float max_width, float height){
+	float procent = (wartosc - min) / (max - min);
+
+	float szerokosc = procent * max_width;
+	prostokat.setSize(sf::Vector2f(szerokosc, height));
+}
 
 //RYSOWANIE PRSOTKATA
 void Prosty_prostokat::rysuj(sf::RenderWindow& window) {

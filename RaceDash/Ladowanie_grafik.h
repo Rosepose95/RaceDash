@@ -10,6 +10,7 @@ public:
     sf::Texture olej_png;
     sf::Texture bateria_png;
     sf::Texture woda_png;
+    sf::Texture paliwo_png;
 
 public:
 

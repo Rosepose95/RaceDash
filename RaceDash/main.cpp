@@ -132,7 +132,21 @@ int main() {
         Ladowanie_grafik woda_zdj(grafika.woda_png);
         woda_zdj.aktualizuj_polozenie({ 40.0, 480.0 });
         woda_zdj.zmiana_wielkosc(0.125);
+
+        //WYSWIETLANIE GRAFIKI PALIWA
+        Ladowanie_grafik paliwo_zdj(grafika.paliwo_png);
+        paliwo_zdj.aktualizuj_polozenie({550.0, 550});
+        paliwo_zdj.zmiana_wielkosc(0.1);
+
+        //PROSTOKAT OBRAMOWKA POZIOMU PALIWA
+        Prosty_prostokat obramowka_paliwo;
+        obramowka_paliwo.aktualizuj_prostokat({ 100,30 }, sf::Color::Transparent, { 0,0,0 }, 5, { 600, 535 });
+
+        //PROSTOKAT WSKAZUJACY POZIOM PALIWA
+        Prosty_prostokat stan_paliwa;
+        stan_paliwa.aktualizuj_prostokat({ 100,30 }, { 0,255,0 }, sf::Color::Transparent, 0, { 600, 535 });
         
+
 
 
 
@@ -235,6 +249,11 @@ int main() {
                     }
                 }
 
+                //WYSWIETLANIE POZIOMU PALIWA
+                stan_paliwa.poziom_paliwa(100.0, 0.0, AktualnyStan.getFuel(), 100.0, 30.0);
+               // if (AktualnyStan.getFuel() > 0.0 && AktualnyStan.getFuel() < 30.0) {
+                  //  stan_paliwa.
+               // }
 
                 zegar_dla_danych.restart();
             }
@@ -263,6 +282,10 @@ int main() {
 
             obramowka_tempoleju.rysuj(window);
             obramowka_rpm.rysuj(window);
+
+            paliwo_zdj.rysuj(window);
+            obramowka_paliwo.rysuj(window);
+            stan_paliwa.rysuj(window);
 
             for (int i = 0; i < 5; i++) {
                 diody[i].rysuj(window);

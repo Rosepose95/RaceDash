@@ -63,5 +63,6 @@ public:
 	Prosty_prostokat(){}
 
 	void aktualizuj_prostokat(sf::Vector2f SetSize, sf::Color FillColor, sf::Color OutlineColor, int Thickness, sf::Vector2f Position);
+	void poziom_paliwa(float max, float min, float wartosc, float max_width, float height);
 	void rysuj(sf::RenderWindow& window);
 };
