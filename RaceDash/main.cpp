@@ -123,6 +123,10 @@ int main() {
         bateria_zdj.aktualizuj_polozenie({40.0, 540.0});
         bateria_zdj.zmiana_wielkosc(0.125);
 
+        Ladowanie_grafik bateria_dead_zdj(grafika.bateria_low_png);
+        bateria_dead_zdj.aktualizuj_polozenie({ 40.0, 540.0 });
+        bateria_dead_zdj.zmiana_wielkosc(0.125);
+
         //WYSWIETLANIE TEMP WODY
         Wyswietlanie woda(grafika.czcionka);
         woda.aktualizuj_prostokat({100.0, 40.0}, {10,10,10}, {100,100,100}, 2, {50.0, 20.0}, {130.0, 480.0});
@@ -132,6 +136,11 @@ int main() {
         Ladowanie_grafik woda_zdj(grafika.woda_png);
         woda_zdj.aktualizuj_polozenie({ 40.0, 480.0 });
         woda_zdj.zmiana_wielkosc(0.125);
+
+        //LADOWANIE GRAFIKI PRZEGRZANIA WODY
+        Ladowanie_grafik woda_overheat_zdj(grafika.woda_overheat_png);
+        woda_overheat_zdj.aktualizuj_polozenie({ 40.0, 480.0 });
+        woda_overheat_zdj.zmiana_wielkosc(0.125);
 
         //WYSWIETLANIE GRAFIKI PALIWA
         Ladowanie_grafik paliwo_zdj(grafika.paliwo_png);
@@ -158,11 +167,6 @@ int main() {
         //ZAPALANIE DIODY OD REZERWY
         bool rezerwa = false;
         
-        //PROSTOAKAT DLA KONTROLEK
-        Prosty_prostokat kontrolki_panel;
-        kontrolki_panel.aktualizuj_prostokat({300,50}, sf::Color::Transparent, {0,0,0}, 6, {250,20});
-
-
 
         while (window.isOpen()) {
             while (const auto event = window.pollEvent()) {
@@ -313,10 +317,33 @@ int main() {
             wskazowka_tempoleju.rysuj(window);
 
             bateria.rysuj(window, AktualnyStan.getBateria(), 2, "V");
-            bateria_zdj.rysuj(window);
+
+            if (AktualnyStan.getBateria() < 12.0) {
+                bateria_dead_zdj.rysuj(window);
+                bateria.zmiana_koloru_obramowki({ 255, 0, 0 });
+            }
+            else {
+                bateria_zdj.rysuj(window);
+                bateria.zmiana_koloru_obramowki({ 0, 255, 0 });
+            }
 
             woda.rysuj(window, AktualnyStan.getTempChlodnicy(), 2, "C");
-            woda_zdj.rysuj(window);
+
+            if (AktualnyStan.getTempChlodnicy() >= 110 && AktualnyStan.getTempChlodnicy() < 120) {
+                woda_overheat_zdj.rysuj(window);
+                woda.zmiana_koloru_obramowki({255,165,0});
+
+            }
+            else if (AktualnyStan.getTempChlodnicy() >= 120 && zegar_dla_migania.getElapsedTime().asMilliseconds() % 500 > 250) {
+                    woda_overheat_zdj.rysuj(window);
+                    woda.zmiana_koloru_obramowki({ 255,0,0 });
+
+            }
+            else { 
+                woda_zdj.rysuj(window);
+                woda.zmiana_koloru_obramowki({ 0,255,0 });
+
+            }
 
             obramowka_tempoleju.rysuj(window);
             obramowka_rpm.rysuj(window);
@@ -324,6 +351,7 @@ int main() {
             paliwo_zdj.rysuj(window);
             obramowka_paliwo.rysuj(window);
             stan_paliwa.rysuj(window);
+
             if (rezerwa==true) {
                 rezerwa_zdj.rysuj(window);
             }
@@ -332,8 +360,6 @@ int main() {
                 diody[i].rysuj(window);
             }
             dioda_rezerwy.rysuj(window);
-
-            kontrolki_panel.rysuj(window);
 
             ramka.rysuj(window);
 

@@ -38,5 +38,12 @@ bool grafiki::zaladuj_grafike() {
     if (rezerwa_png.loadFromFile("grafika/rezerwa.png") == false) {
         return 0;
     }
+    if (bateria_low_png.loadFromFile("grafika/car-battery-low.png") == false) {
+        return 0;
+    }
+    if (woda_overheat_png.loadFromFile("grafika/temp-wody-over.png") == false) {
+        return 0;
+    }
+
     return true;
 }
