@@ -16,7 +16,6 @@ public:
 	void aktualizuj_tekst(int CharacterSize, sf::Color TextColor, sf::Vector2f Position);
 	void aktualizuj_string(float wartosc, int precyzja, string znak);
 	void zmiana_koloru_obramowki(sf::Color kolor);
-	void plynna_zmiana_koloru(float wartosc, float maxwartosc, float minwartosc, sf::Color start, sf::Color koniec);
 	void rysuj(sf::RenderWindow& window, float wartosc, int precyzja, string znak);
 };
 
@@ -51,7 +50,6 @@ public:
 	void aktualizuj_kolo(int Radius, sf::Color OutlineColor, sf::Color FillColor, int Thickness, sf::Vector2f Position);
 	void zmiana_obramowki(sf::Color color);
 	void zmiana_wypelnienia(sf::Color color);
-	void plynna_zmiana_koloru(float wartosc, float maxwartosc, float minwartosc, sf::Color start, sf::Color koniec);
 	void rysuj(sf::RenderWindow& window);
 };
 
@@ -64,5 +62,9 @@ public:
 
 	void aktualizuj_prostokat(sf::Vector2f SetSize, sf::Color FillColor, sf::Color OutlineColor, int Thickness, sf::Vector2f Position);
 	void poziom_paliwa(float max, float min, float wartosc, float max_width, float height);
+	void zmiana_wypelnienia(sf::Color color);
 	void rysuj(sf::RenderWindow& window);
 };
+
+
+sf::Color plynna_zmiana_koloru(float wartosc, float maxwartosc, float minwartosc, sf::Color start, sf::Color koniec);

@@ -55,27 +55,6 @@ void Wyswietlanie::zmiana_koloru_obramowki(sf::Color kolor) {
 
 }
 
-//PLYNNA ZMIANA KOLORU
-void Wyswietlanie::plynna_zmiana_koloru(float wartosc, float maxwartosc, float minwartosc, sf::Color start, sf::Color koniec) {
-
-	if (wartosc <= minwartosc) {
-		prostokat.setOutlineColor(start);
-		return;
-	}
-	if (wartosc >= maxwartosc) {
-		prostokat.setOutlineColor(koniec);
-		return;
-	}
-
-	float procent = (wartosc - minwartosc) / (maxwartosc - minwartosc);
-
-	int r = start.r + (koniec.r - start.r) * procent;
-	int g = start.g + (koniec.g - start.g) * procent;
-	int b = start.b + (koniec.b - start.b) * procent;
-
-	prostokat.setOutlineColor(sf::Color(r, g, b));
-}
-
 //RYSOWANIE WSZYSTKIEGO ORAZ AKTUALIZACJA WARTOSCI STRINGA
 void Wyswietlanie::rysuj(sf::RenderWindow& window, float wartosc, int precyzja, string znak){
 
@@ -170,27 +149,6 @@ void Proste_kolo::zmiana_wypelnienia(sf::Color color) {
 
 }
 
-//PLYNNA ZMIANA KOLORU
-void Proste_kolo::plynna_zmiana_koloru(float wartosc, float maxwartosc, float minwartosc, sf::Color start, sf::Color koniec) {
-
-	if (wartosc <= minwartosc) {
-		kolo.setOutlineColor(start);
-		return;
-	}
-	if (wartosc >= maxwartosc) {
-		kolo.setOutlineColor(koniec);
-		return;
-	}
-
-	float procent = (wartosc - minwartosc) / (maxwartosc - minwartosc);
-
-	int r = start.r + (koniec.r - start.r) * procent;
-	int g = start.g + (koniec.g - start.g) * procent;
-	int b = start.b + (koniec.b - start.b) * procent;
-
-	kolo.setOutlineColor(sf::Color(r, g, b));
-}
-
 //WYSWIETLANIE KOLA
 void Proste_kolo::rysuj(sf::RenderWindow& window) {
 
@@ -218,7 +176,35 @@ void Prosty_prostokat::poziom_paliwa(float max, float min, float wartosc, float 
 	prostokat.setSize(sf::Vector2f(szerokosc, height));
 }
 
+//ZMIANA KOLORU WYPELNIENIA
+void Prosty_prostokat::zmiana_wypelnienia(sf::Color color) {
+	prostokat.setFillColor(color);
+}
+
 //RYSOWANIE PRSOTKATA
 void Prosty_prostokat::rysuj(sf::RenderWindow& window) {
 	window.draw(prostokat);
+}
+
+//---------------------------------------------------------------
+
+//PLYNNA ZMIANA KOLORU
+sf::Color plynna_zmiana_koloru(float wartosc, float maxwartosc, float minwartosc, sf::Color start, sf::Color koniec) {
+
+	if (wartosc > maxwartosc) {
+		return koniec;
+	}
+	if (wartosc < minwartosc) {
+		return start;
+	}
+
+	float procent = (wartosc - minwartosc) / (maxwartosc - minwartosc);
+
+	int r = start.r + (koniec.r - start.r) * procent;
+	int g = start.g + (koniec.g - start.g) * procent;
+	int b = start.b + (koniec.b - start.b) * procent;
+	
+	sf::Color finalny(r, g, b);
+	return finalny;
+
 }

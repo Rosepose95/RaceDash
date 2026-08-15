@@ -35,5 +35,8 @@ bool grafiki::zaladuj_grafike() {
     if (paliwo_png.loadFromFile("grafika/fuel.png")==false) {
         return 0;
     }
+    if (rezerwa_png.loadFromFile("grafika/rezerwa.png") == false) {
+        return 0;
+    }
     return true;
 }

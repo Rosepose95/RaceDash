@@ -11,6 +11,7 @@ public:
     sf::Texture bateria_png;
     sf::Texture woda_png;
     sf::Texture paliwo_png;
+    sf::Texture rezerwa_png;
 
 public:
 
