@@ -142,6 +142,22 @@ int main() {
         woda_overheat_zdj.aktualizuj_polozenie({ 40.0, 480.0 });
         woda_overheat_zdj.zmiana_wielkosc(0.125);
 
+        //LADOWANIE CISNIENIA OLEJU
+        Wyswietlanie cisnienie_oleju(grafika.czcionka);
+        cisnienie_oleju.aktualizuj_prostokat({ 130.0, 40.0 }, { 10,10,10 }, { 100,100,100 }, 2, { 65.0, 20.0 }, {340.0, 480.0});
+        cisnienie_oleju.aktualizuj_tekst(20, { 255,255,255 }, { 305.0, 470.0 });
+
+        //LADOWANIE GRAFIKI CISNIENIE OLEJU
+        Ladowanie_grafik cisnienieoleju_zdj(grafika.cisnienieolej_png);
+        cisnienieoleju_zdj.aktualizuj_polozenie({240.0, 480.0});
+        cisnienieoleju_zdj.zmiana_wielkosc(0.125);
+
+        //LADOWANIE GRAFIKI ZA WYSOKIE CISNIENIE OLEJU 
+        Ladowanie_grafik wysokie_cisnienieoleju_zdj(grafika.wcisnienieolej_png);
+        wysokie_cisnienieoleju_zdj.aktualizuj_polozenie({ 240.0, 480.0 });
+        wysokie_cisnienieoleju_zdj.zmiana_wielkosc(0.125);
+        
+
         //WYSWIETLANIE GRAFIKI PALIWA
         Ladowanie_grafik paliwo_zdj(grafika.paliwo_png);
         paliwo_zdj.aktualizuj_polozenie({550.0, 550});
@@ -316,7 +332,29 @@ int main() {
             temperatura_oleju.rysuj(window);
             wskazowka_tempoleju.rysuj(window);
 
-            bateria.rysuj(window, AktualnyStan.getBateria(), 2, "V");
+            cisnienie_oleju.rysuj(window, AktualnyStan.getCisnienie(), 1, " Bar");
+
+            if (AktualnyStan.getCisnienie() >= 2.5 && AktualnyStan.getCisnienie() < 6.7) {
+                cisnienieoleju_zdj.rysuj(window);
+                cisnienie_oleju.zmiana_koloru_obramowki({ 0,255,0 });
+            }
+            else if (AktualnyStan.getCisnienie() >= 1.0 && AktualnyStan.getCisnienie() < 2.5 ){
+                wysokie_cisnienieoleju_zdj.rysuj(window);
+                cisnienie_oleju.zmiana_koloru_obramowki({ 255,165,0 });
+            }
+            else {
+                if ((AktualnyStan.getCisnienie() < 1.0 && zegar_dla_migania.getElapsedTime().asMilliseconds() % 500 > 250) || (AktualnyStan.getCisnienie() >= 6.7 && zegar_dla_migania.getElapsedTime().asMilliseconds() % 500 > 250)){
+                    wysokie_cisnienieoleju_zdj.rysuj(window);
+                    cisnienie_oleju.zmiana_koloru_obramowki({255,0,0});
+                }
+                else {
+                    cisnienieoleju_zdj.rysuj(window);
+                    cisnienie_oleju.zmiana_koloru_obramowki({ sf::Color::Transparent });
+                }
+            }
+
+
+            bateria.rysuj(window, AktualnyStan.getBateria(), 1, "V");
 
             if (AktualnyStan.getBateria() < 12.0) {
                 bateria_dead_zdj.rysuj(window);
@@ -327,22 +365,25 @@ int main() {
                 bateria.zmiana_koloru_obramowki({ 0, 255, 0 });
             }
 
-            woda.rysuj(window, AktualnyStan.getTempChlodnicy(), 2, "C");
+            woda.rysuj(window, AktualnyStan.getTempChlodnicy(), 1, "C");
 
             if (AktualnyStan.getTempChlodnicy() >= 110 && AktualnyStan.getTempChlodnicy() < 120) {
                 woda_overheat_zdj.rysuj(window);
                 woda.zmiana_koloru_obramowki({255,165,0});
-
             }
-            else if (AktualnyStan.getTempChlodnicy() >= 120 && zegar_dla_migania.getElapsedTime().asMilliseconds() % 500 > 250) {
-                    woda_overheat_zdj.rysuj(window);
-                    woda.zmiana_koloru_obramowki({ 255,0,0 });
-
+            else if (AktualnyStan.getTempChlodnicy() >= 0 && AktualnyStan.getTempChlodnicy()<110){
+                    woda_zdj.rysuj(window);
+                    woda.zmiana_koloru_obramowki({ 0,255,0 });
             }
             else { 
-                woda_zdj.rysuj(window);
-                woda.zmiana_koloru_obramowki({ 0,255,0 });
-
+                if (AktualnyStan.getTempChlodnicy() >= 120 && zegar_dla_migania.getElapsedTime().asMilliseconds() % 500 > 250) {
+                    woda_overheat_zdj.rysuj(window);
+                    woda.zmiana_koloru_obramowki({ 255,0,0 });
+                }
+                else {
+                    woda_zdj.rysuj(window);
+                    woda.zmiana_koloru_obramowki({sf::Color::Transparent});
+                }
             }
 
             obramowka_tempoleju.rysuj(window);

@@ -31,9 +31,10 @@ class Pojazd : private DaneSilnika, private DanePojazdu {
 
 	float czas;
 	float paliwo;
+	float cisnienie_oleju;
 
 public:
-	Pojazd(float t, float to, float o, float tc, float p, float b, float gear, float f): czas(t), paliwo(f), DaneSilnika(to, o, tc), DanePojazdu(p, b, gear) {}
+	Pojazd(float t, float to, float o, float tc, float p, float b, float gear, float f, float c): cisnienie_oleju(c), czas(t), paliwo(f), DaneSilnika(to, o, tc), DanePojazdu(p, b, gear) {}
 	Pojazd() = default;
 
 
@@ -49,6 +50,7 @@ public:
 	float getCzas() { return czas; }
 	float getGear() { return bieg; }
 	float getFuel() { return paliwo; }
+	float getCisnienie() { return cisnienie_oleju; }
 
 };
 

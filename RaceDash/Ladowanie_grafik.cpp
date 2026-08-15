@@ -44,6 +44,12 @@ bool grafiki::zaladuj_grafike() {
     if (woda_overheat_png.loadFromFile("grafika/temp-wody-over.png") == false) {
         return 0;
     }
+    if (cisnienieolej_png.loadFromFile("grafika/cisnienie_oleju.png") == false) {
+        return 0;
+    }
+    if (wcisnienieolej_png.loadFromFile("grafika/wcisnienie_oleju.png") == false) {
+        return 0;
+    }
 
     return true;
 }
