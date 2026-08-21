@@ -55,6 +55,49 @@ void Wyswietlanie::zmiana_koloru_obramowki(sf::Color kolor) {
 
 }
 
+void Wyswietlanie::alarm_gorny(float wartosc, float prog_ostrzegawczy, float prog_krytyczny, sf::Clock& Zegar, Ladowanie_grafik& image1, Ladowanie_grafik& image2, sf::RenderWindow& window){
+	if (wartosc >= prog_krytyczny) {
+
+		if (Zegar.getElapsedTime().asMilliseconds() % 500 > 250) {
+			image1.rysuj(window);
+			prostokat.setOutlineColor({ 255,0,0 });
+		}
+		else {
+			prostokat.setOutlineColor({ sf::Color::Transparent });
+			image2.rysuj(window);
+		}
+	}
+	else if (wartosc >= prog_ostrzegawczy) {
+		prostokat.setOutlineColor({ 255,165,0 });
+		image1.rysuj(window);
+	}
+	else {
+		prostokat.setOutlineColor({0,255,0});
+		image2.rysuj(window);
+	}
+}
+void Wyswietlanie::alarm_dolny(float wartosc, float prog_ostrzegawczy, float prog_krytyczny, sf::Clock& Zegar, Ladowanie_grafik& image1, Ladowanie_grafik& image2, sf::RenderWindow& window) {
+	if (wartosc <= prog_krytyczny) {
+
+		if(Zegar.getElapsedTime().asMilliseconds() % 500 > 250) {
+			image1.rysuj(window);
+			prostokat.setOutlineColor({ 255,0,0 });
+		}
+		else {
+		prostokat.setOutlineColor({ sf::Color::Transparent });
+		image2.rysuj(window);
+		}
+	}
+	else if (wartosc <= prog_ostrzegawczy) {
+		prostokat.setOutlineColor({ 255,165,0 });
+		image1.rysuj(window);
+	}
+	else {
+		prostokat.setOutlineColor({ 0,255,0 });
+		image2.rysuj(window);
+	}
+}
+
 //RYSOWANIE WSZYSTKIEGO ORAZ AKTUALIZACJA WARTOSCI STRINGA
 void Wyswietlanie::rysuj(sf::RenderWindow& window, float wartosc, int precyzja, string znak){
 

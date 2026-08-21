@@ -3,6 +3,8 @@
 #include <string>
 #include "dane.h"
 
+class Ladowanie_grafik;			//dodajemy dla wysietlanie(metoda progi_dla_rgb)
+
 class Wyswietlanie {
 	sf::Text tekst;
 	sf::RectangleShape prostokat;
@@ -16,6 +18,8 @@ public:
 	void aktualizuj_tekst(int CharacterSize, sf::Color TextColor, sf::Vector2f Position);
 	void aktualizuj_string(float wartosc, int precyzja, string znak);
 	void zmiana_koloru_obramowki(sf::Color kolor);
+	void alarm_gorny(float wartosc, float prog_ostrzegawczy, float prog_krytyczny, sf::Clock& Zegar, Ladowanie_grafik& image1, Ladowanie_grafik& image2, sf::RenderWindow& window);
+	void alarm_dolny(float wartosc, float prog_ostrzegawczy, float prog_krytyczny, sf::Clock& Zegar, Ladowanie_grafik& image1, Ladowanie_grafik& image2, sf::RenderWindow& window);
 	void rysuj(sf::RenderWindow& window, float wartosc, int precyzja, string znak);
 };
 

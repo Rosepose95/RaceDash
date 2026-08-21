@@ -16,6 +16,7 @@ public:
     sf::Texture woda_overheat_png;
     sf::Texture paliwo_png;
     sf::Texture rezerwa_png;
+    sf::Texture menu_png;
 
 public:
 

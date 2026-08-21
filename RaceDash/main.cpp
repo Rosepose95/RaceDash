@@ -2,6 +2,8 @@
 #include "dane.h"
 #include "wyswietlanie.h"
 #include "Ladowanie_grafik.h"
+#include "menu.h"
+
 #include <iostream>
 #include <fstream>
 #include <string>
@@ -38,6 +40,16 @@ int main() {
             cout << "Blad w plikach grafik"<<endl;
             return 0;
         }
+
+        //MENU
+        bool tryb_cyfrowy=false;
+
+        Menu wyswietlanie(grafika.menu_png, grafika.czcionka);
+        wyswietlanie.wymiary_zdj({ 730,30 }, 0.07);
+        wyswietlanie.aktualizuj_wymiary({ 630,10 }, { 160,150 }, { 0,0,0,125 }, { 255,0,0 }, 5);
+        wyswietlanie.set_tekst("Zegary analogowe", { 645,70 }, "Zegary cyfrowe", { 645, 120 }, "Menu", { 635,20 }, 10);
+        wyswietlanie.aktualizuj_tlo_napisow({ 640,60 }, { 640, 110 }, { 130,30 }, sf::Color::Transparent, { 255,0,0 }, 2);
+
 
         //RYSOWANIE OBROTOMIERZA
         Ladowanie_grafik obrotomierz(grafika.obrotomierz_png);
@@ -182,22 +194,45 @@ int main() {
 
         //ZAPALANIE DIODY OD REZERWY
         bool rezerwa = false;
-        
+
+ 
+
 
         while (window.isOpen()) {
+
             while (const auto event = window.pollEvent()) {
                 if (event->is<sf::Event::Closed>())                              //sprawdzanie czy kliknieto X w oknie
                 {
                     window.close();
                 }
-            }
 
+
+                if (const auto* mousevent = event->getIf<sf::Event::MouseButtonPressed>()) {    //mousevent = przycisniecie myszki
+                    if (mousevent->button == sf::Mouse::Button::Left) {                         //jesli zostal klikniety lewy przycisk to uzyskujemy dostep do position x,y
+
+                        float position_x = mousevent->position.x;
+                        float position_y = mousevent->position.y;
+
+                        if (wyswietlanie.GETgranice_zdjecia().contains({ position_x, position_y })) {           //sprawdzamy czy myszka zostala kliknieta na granicach zdjecia opcji
+
+                            wyswietlanie.wlaczanie_menu();
+                            //wyswietlanie.animacja_pokazywania(window);
+                        }
+                        else {
+                            wyswietlanie.obsluga_klikniecia(position_x, position_y, tryb_cyfrowy);
+
+                        }
+
+                    }
+                }
+            }
             //PETLA AKTUALIZUJACA DANE AZ DO KONCA DANYCH W PLIKU
             if ((MoznaCzytac == true) && (zegar_dla_danych.getElapsedTime().asMilliseconds() >= 100)) {
                 if (odczyt(logi, AktualnyStan) == false) {                              //jesli skoncza sie dane do czytania koniec programu
                     cout << "Koniec danych" << endl;
                     MoznaCzytac = false;
                 }
+
 
                 //UAKTUALNIENIE DANYCH DLA WSKAZOWKI
                 wskazowka_obrotomierz.wyliczanie_kata(AktualnyStan.getObroty());
@@ -301,14 +336,14 @@ int main() {
                 if (AktualnyStan.getFuel() >= 0.0 && AktualnyStan.getFuel() < 15.0) {
                     stan_paliwa.zmiana_wypelnienia({ 255,0,0 });
                     rezerwa = true;
-                       
+
 
                 }
                 else if (AktualnyStan.getFuel() >= 15.0 && AktualnyStan.getFuel() < 40.0) {
                     stan_paliwa.zmiana_wypelnienia(plynna_zmiana_koloru(AktualnyStan.getFuel(), 40.0, 15.0, { 255,0,0 }, { 255, 220, 0 }));
                     rezerwa = false;
                 }
-                else if (AktualnyStan.getFuel() >= 40.0){
+                else if (AktualnyStan.getFuel() >= 40.0) {
                     stan_paliwa.zmiana_wypelnienia(plynna_zmiana_koloru(AktualnyStan.getFuel(), 100.0, 40.0, { 255, 220, 0 }, { 50, 205, 50 }));
                     rezerwa = false;
                 }
@@ -316,97 +351,86 @@ int main() {
                 zegar_dla_danych.restart();
             }
 
-            //TLO CALEGO OKNA
             window.clear(sf::Color(30, 30, 30));
 
-            //WYSWIETLANIE WSZYSTKIEGO
-            obrotomierz.rysuj(window);
-            bieg.rysuj(window, AktualnyStan.getGear(), 0, "0");
-            obroty.rysuj(window, AktualnyStan.getObroty(), 0, "0");
-            wskazowka_obrotomierz.rysuj(window);
+            if (tryb_cyfrowy == false) {
 
-            predkosciomierz.rysuj(window);
-            predkosc.rysuj(window, AktualnyStan.getPredkosc(), 0, "0");
-            wskazowka_predkosciomierz.rysuj(window);
+                //WYSWIETLANIE WSZYSTKIEGO
+                obrotomierz.rysuj(window);
+                bieg.rysuj(window, AktualnyStan.getGear(), 0, "0");
+                obroty.rysuj(window, AktualnyStan.getObroty(), 0, "0");
+                wskazowka_obrotomierz.rysuj(window);
 
-            temperatura_oleju.rysuj(window);
-            wskazowka_tempoleju.rysuj(window);
+                predkosciomierz.rysuj(window);
+                predkosc.rysuj(window, AktualnyStan.getPredkosc(), 0, "0");
+                wskazowka_predkosciomierz.rysuj(window);
 
-            cisnienie_oleju.rysuj(window, AktualnyStan.getCisnienie(), 1, " Bar");
+                temperatura_oleju.rysuj(window);
+                wskazowka_tempoleju.rysuj(window);
 
-            if (AktualnyStan.getCisnienie() >= 2.5 && AktualnyStan.getCisnienie() < 6.7) {
-                cisnienieoleju_zdj.rysuj(window);
-                cisnienie_oleju.zmiana_koloru_obramowki({ 0,255,0 });
-            }
-            else if (AktualnyStan.getCisnienie() >= 1.0 && AktualnyStan.getCisnienie() < 2.5 ){
-                wysokie_cisnienieoleju_zdj.rysuj(window);
-                cisnienie_oleju.zmiana_koloru_obramowki({ 255,165,0 });
-            }
-            else {
-                if ((AktualnyStan.getCisnienie() < 1.0 && zegar_dla_migania.getElapsedTime().asMilliseconds() % 500 > 250) || (AktualnyStan.getCisnienie() >= 6.7 && zegar_dla_migania.getElapsedTime().asMilliseconds() % 500 > 250)){
-                    wysokie_cisnienieoleju_zdj.rysuj(window);
-                    cisnienie_oleju.zmiana_koloru_obramowki({255,0,0});
-                }
-                else {
+                cisnienie_oleju.rysuj(window, AktualnyStan.getCisnienie(), 1, " Bar");
+
+                if (AktualnyStan.getCisnienie() >= 2.5 && AktualnyStan.getCisnienie() < 6.7) {
                     cisnienieoleju_zdj.rysuj(window);
-                    cisnienie_oleju.zmiana_koloru_obramowki({ sf::Color::Transparent });
+                    cisnienie_oleju.zmiana_koloru_obramowki({ 0,255,0 });
                 }
-            }
-
-
-            bateria.rysuj(window, AktualnyStan.getBateria(), 1, "V");
-
-            if (AktualnyStan.getBateria() < 12.0) {
-                bateria_dead_zdj.rysuj(window);
-                bateria.zmiana_koloru_obramowki({ 255, 0, 0 });
-            }
-            else {
-                bateria_zdj.rysuj(window);
-                bateria.zmiana_koloru_obramowki({ 0, 255, 0 });
-            }
-
-            woda.rysuj(window, AktualnyStan.getTempChlodnicy(), 1, "C");
-
-            if (AktualnyStan.getTempChlodnicy() >= 110 && AktualnyStan.getTempChlodnicy() < 120) {
-                woda_overheat_zdj.rysuj(window);
-                woda.zmiana_koloru_obramowki({255,165,0});
-            }
-            else if (AktualnyStan.getTempChlodnicy() >= 0 && AktualnyStan.getTempChlodnicy()<110){
-                    woda_zdj.rysuj(window);
-                    woda.zmiana_koloru_obramowki({ 0,255,0 });
-            }
-            else { 
-                if (AktualnyStan.getTempChlodnicy() >= 120 && zegar_dla_migania.getElapsedTime().asMilliseconds() % 500 > 250) {
-                    woda_overheat_zdj.rysuj(window);
-                    woda.zmiana_koloru_obramowki({ 255,0,0 });
+                else if (AktualnyStan.getCisnienie() >= 1.0 && AktualnyStan.getCisnienie() < 2.5) {
+                    wysokie_cisnienieoleju_zdj.rysuj(window);
+                    cisnienie_oleju.zmiana_koloru_obramowki({ 255,165,0 });
                 }
                 else {
-                    woda_zdj.rysuj(window);
-                    woda.zmiana_koloru_obramowki({sf::Color::Transparent});
+                    if ((AktualnyStan.getCisnienie() < 1.0 && zegar_dla_migania.getElapsedTime().asMilliseconds() % 500 > 250) || (AktualnyStan.getCisnienie() >= 6.7 && zegar_dla_migania.getElapsedTime().asMilliseconds() % 500 > 250)) {
+                        wysokie_cisnienieoleju_zdj.rysuj(window);
+                        cisnienie_oleju.zmiana_koloru_obramowki({ 255,0,0 });
+                    }
+                    else {
+                        cisnienieoleju_zdj.rysuj(window);
+                        cisnienie_oleju.zmiana_koloru_obramowki({ sf::Color::Transparent });
+                    }
                 }
+
+
+                bateria.rysuj(window, AktualnyStan.getBateria(), 1, "V");
+
+                if (AktualnyStan.getBateria() < 12.0) {
+                    bateria_dead_zdj.rysuj(window);
+                    bateria.zmiana_koloru_obramowki({ 255, 0, 0 });
+                }
+                else {
+                    bateria_zdj.rysuj(window);
+                    bateria.zmiana_koloru_obramowki({ 0, 255, 0 });
+                }
+
+                woda.rysuj(window, AktualnyStan.getTempChlodnicy(), 1, "C");
+
+                woda.alarm_gorny(AktualnyStan.getTempChlodnicy(), 110.0, 120.0, zegar_dla_migania, woda_overheat_zdj, woda_zdj, window);
+
+                obramowka_tempoleju.rysuj(window);
+                obramowka_rpm.rysuj(window);
+
+                paliwo_zdj.rysuj(window);
+                obramowka_paliwo.rysuj(window);
+                stan_paliwa.rysuj(window);
+
+                if (rezerwa == true) {
+                    rezerwa_zdj.rysuj(window);
+                }
+
+                for (int i = 0; i < 5; i++) {
+                    diody[i].rysuj(window);
+                }
+                dioda_rezerwy.rysuj(window);
+
+
             }
+            else {
 
-            obramowka_tempoleju.rysuj(window);
-            obramowka_rpm.rysuj(window);
-
-            paliwo_zdj.rysuj(window);
-            obramowka_paliwo.rysuj(window);
-            stan_paliwa.rysuj(window);
-
-            if (rezerwa==true) {
-                rezerwa_zdj.rysuj(window);
             }
-
-            for (int i = 0; i < 5; i++) {
-                diody[i].rysuj(window);
-            }
-            dioda_rezerwy.rysuj(window);
-
             ramka.rysuj(window);
-
+            wyswietlanie.rysuj_zdj(window);
+            wyswietlanie.rysuj_menu(window);
             window.display();
         }
-
         logi.close();
         return 0;
     }
