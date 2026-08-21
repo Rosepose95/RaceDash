@@ -34,18 +34,18 @@ void Menu::set_tekst(string tekst_opcja1, sf::Vector2f Pozycja1, string tekst_op
 
 }
 
-void Menu::aktualizuj_tlo_napisow(sf::Vector2f Position1, sf::Vector2f Position2, sf::Vector2f Size, sf::Color Fillcolor, sf::Color Outlinecolor, int thickness) {
+void Menu::aktualizuj_tlo_napisow(sf::Vector2f Position1, sf::Vector2f Position2, sf::Vector2f Size, sf::Color Fillcolor, sf::Color Outlinecolor1, sf::Color Outlinecolor2, int thickness) {
 
 	tlo_opcja1.setPosition({ Position1 });
 	tlo_opcja1.setSize({ Size });
 	tlo_opcja1.setFillColor(Fillcolor);
-	tlo_opcja1.setOutlineColor(Outlinecolor);
+	tlo_opcja1.setOutlineColor(Outlinecolor1);
 	tlo_opcja1.setOutlineThickness(thickness);
 
 	tlo_opcja2.setPosition({ Position2 });
 	tlo_opcja2.setSize({ Size });
 	tlo_opcja2.setFillColor(Fillcolor);
-	tlo_opcja2.setOutlineColor(Outlinecolor);
+	tlo_opcja2.setOutlineColor(Outlinecolor2);
 	tlo_opcja2.setOutlineThickness(thickness);
 
 

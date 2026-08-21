@@ -48,7 +48,7 @@ int main() {
         wyswietlanie.wymiary_zdj({ 730,30 }, 0.07);
         wyswietlanie.aktualizuj_wymiary({ 630,10 }, { 160,150 }, { 0,0,0,125 }, { 255,0,0 }, 5);
         wyswietlanie.set_tekst("Zegary analogowe", { 645,70 }, "Zegary cyfrowe", { 645, 120 }, "Menu", { 635,20 }, 10);
-        wyswietlanie.aktualizuj_tlo_napisow({ 640,60 }, { 640, 110 }, { 130,30 }, sf::Color::Transparent, { 255,0,0 }, 2);
+        wyswietlanie.aktualizuj_tlo_napisow({ 640,60 }, { 640, 110 }, { 130,30 }, sf::Color::Transparent, { 0,255,0 }, {255,0,0}, 2);
 
 
         //RYSOWANIE OBROTOMIERZA
@@ -195,6 +195,16 @@ int main() {
         //ZAPALANIE DIODY OD REZERWY
         bool rezerwa = false;
 
+        //------------------------------------------------------------------------DLA TRYBU CYFROWEGO
+        //Obraz obrotomierza
+        Ladowanie_grafik obrotomierz_cyfrowy(grafika.obrotomierz_cyfrowy_png);
+        obrotomierz_cyfrowy.aktualizuj_polozenie({400, 200});
+        obrotomierz_cyfrowy.zmiana_wielkosc(0.7);
+
+        //Wskazywanie obrotow
+        Prosty_prostokat obroty_cyfrowy;
+        obroty_cyfrowy.aktualizuj_prostokat({570,60}, {0,255,0}, sf::Color::Transparent, 0, {100,175});
+
  
 
 
@@ -261,17 +271,26 @@ int main() {
 
                 }
 
+                //WYSWIETLANIE AKTUALNUCH OBROTOW
+                obroty_cyfrowy.poziom_paliwa(8000.0, 0.0, AktualnyStan.getObroty(), 570, 60);
 
                 //ZMIANA KOLORU OBRAMOWKI DLA OBROTOW
                 if (AktualnyStan.getObroty() >= 0 && AktualnyStan.getObroty() <= 3500) {
                     obroty.zmiana_koloru_obramowki(plynna_zmiana_koloru(AktualnyStan.getObroty(), 3500, 0, { 50, 205, 50 }, { 255, 140, 0 }));
                     obramowka_rpm.zmiana_obramowki(plynna_zmiana_koloru(AktualnyStan.getObroty(), 3500, 0, { 50, 205, 50 }, { 255, 140, 0 }));
 
+                    obroty_cyfrowy.zmiana_wypelnienia(plynna_zmiana_koloru(AktualnyStan.getObroty(), 3500, 0, { 50, 205, 50 }, { 255, 140, 0 }));
+
+
                 }
 
                 else if (AktualnyStan.getObroty() > 3500 && AktualnyStan.getObroty() <= 6000) {
                     obroty.zmiana_koloru_obramowki(plynna_zmiana_koloru(AktualnyStan.getObroty(), 6000, 3500, { 255, 140, 0 }, { 255, 80, 0 }));
                     obramowka_rpm.zmiana_obramowki(plynna_zmiana_koloru(AktualnyStan.getObroty(), 6000, 3500, { 255, 140, 0 }, { 255, 80, 0 }));
+
+                    obroty_cyfrowy.zmiana_wypelnienia(plynna_zmiana_koloru(AktualnyStan.getObroty(), 6000, 3500, { 255, 140, 0 }, { 255, 80, 0 }));
+
+
 
 
                 }
@@ -280,6 +299,7 @@ int main() {
                     obroty.zmiana_koloru_obramowki(plynna_zmiana_koloru(AktualnyStan.getObroty(), 7000, 6000, { 255, 80, 0 }, { 255, 0, 0 }));
                     obramowka_rpm.zmiana_obramowki(plynna_zmiana_koloru(AktualnyStan.getObroty(), 7000, 6000, { 255, 80, 0 }, { 255, 0, 0 }));
 
+                    obroty_cyfrowy.zmiana_wypelnienia(plynna_zmiana_koloru(AktualnyStan.getObroty(), 7000, 6000, { 255, 80, 0 }, { 255, 0, 0 }));
 
                 }
 
@@ -288,11 +308,17 @@ int main() {
                         obroty.zmiana_koloru_obramowki(plynna_zmiana_koloru(AktualnyStan.getObroty(), 8000, 7000, { 255, 0, 0 }, { 255, 0, 0 }));
                         obramowka_rpm.zmiana_obramowki(plynna_zmiana_koloru(AktualnyStan.getObroty(), 8000, 7000, { 255, 0, 0 }, { 255, 0, 0 }));
 
+                        obroty_cyfrowy.zmiana_wypelnienia(plynna_zmiana_koloru(AktualnyStan.getObroty(), 8000, 7000, { 255, 0, 0 }, { 255, 0, 0 }));
+
+
                     }
 
                     else {
                         obroty.zmiana_koloru_obramowki(sf::Color::Transparent);
                         obramowka_rpm.zmiana_obramowki(sf::Color::Transparent);
+
+                        obroty_cyfrowy.zmiana_wypelnienia(sf::Color::Transparent);
+
                     }
                 }
 
@@ -416,21 +442,30 @@ int main() {
                     rezerwa_zdj.rysuj(window);
                 }
 
-                for (int i = 0; i < 5; i++) {
-                    diody[i].rysuj(window);
-                }
                 dioda_rezerwy.rysuj(window);
 
 
             }
             else {
+                obroty_cyfrowy.rysuj(window);
+                obrotomierz_cyfrowy.rysuj(window);
 
             }
+
+            for (int i = 0; i < 5; i++) {
+                diody[i].rysuj(window);
+            }
+
             ramka.rysuj(window);
+
+            obroty.rysuj(window, AktualnyStan.getObroty(), 0, "0");
+
             wyswietlanie.rysuj_zdj(window);
             wyswietlanie.rysuj_menu(window);
+
             window.display();
         }
+
         logi.close();
         return 0;
     }

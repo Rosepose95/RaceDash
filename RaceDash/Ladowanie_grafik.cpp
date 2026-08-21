@@ -15,6 +15,9 @@ bool grafiki::zaladuj_grafike() {
     if (obrotomierz_png.loadFromFile("grafika/obrotomierz.png") == false) {
         return 0;
     }
+     if (obrotomierz_cyfrowy_png.loadFromFile("grafika/obrotomierz_cyfrowy.png") == false) {
+            return 0;
+        }
     if (predkosciomierz_png.loadFromFile("grafika/predkosciomierz.png") == false) {
         return 0;
     }
