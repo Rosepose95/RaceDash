@@ -70,5 +70,14 @@ public:
 	void rysuj(sf::RenderWindow& window);
 };
 
+class Tekst {
+	sf::Text napis;
+	
+public:
+	Tekst(sf::Font & czcionka) : napis(czcionka){}
+
+	void aktualizuj_napis(string text, sf::Vector2f SetPostion, int Charactersize, sf::Color Fillcolor);
+	void rysuj(sf::RenderWindow& window);
+};
 
 sf::Color plynna_zmiana_koloru(float wartosc, float maxwartosc, float minwartosc, sf::Color start, sf::Color koniec);

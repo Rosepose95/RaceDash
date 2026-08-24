@@ -44,11 +44,11 @@ int main() {
         //MENU
         bool tryb_cyfrowy=false;
 
-        Menu wyswietlanie(grafika.menu_png, grafika.czcionka);
-        wyswietlanie.wymiary_zdj({ 730,30 }, 0.07);
-        wyswietlanie.aktualizuj_wymiary({ 630,10 }, { 160,150 }, { 0,0,0,125 }, { 255,0,0 }, 5);
-        wyswietlanie.set_tekst("Zegary analogowe", { 645,70 }, "Zegary cyfrowe", { 645, 120 }, "Menu", { 635,20 }, 10);
-        wyswietlanie.aktualizuj_tlo_napisow({ 640,60 }, { 640, 110 }, { 130,30 }, sf::Color::Transparent, { 0,255,0 }, {255,0,0}, 2);
+        Menu opcje(grafika.menu_png, grafika.czcionka);
+        opcje.wymiary_zdj({ 730,30 }, 0.07);
+        opcje.aktualizuj_wymiary({ 630,10 }, { 160,150 }, { 0,0,0,125 }, { 255,0,0 }, 5);
+        opcje.set_tekst("Zegary analogowe", { 645,70 }, "Zegary cyfrowe", { 645, 120 }, "Menu", { 635,20 }, 10);
+        opcje.aktualizuj_tlo_napisow({ 640,60 }, { 640, 110 }, { 130,30 }, sf::Color::Transparent, { 0,255,0 }, {255,0,0}, 2);
 
 
         //RYSOWANIE OBROTOMIERZA
@@ -99,8 +99,9 @@ int main() {
 
         //RYSOWANIE BIEGU ORAZ JEGO OBRAMOWKI
         Wyswietlanie bieg(grafika.czcionka);
-        bieg.aktualizuj_prostokat({ 30.0, 50.0 }, { 30, 30, 30 }, { 255, 255, 255 }, 2, {15.0, 25.0}, { 400.0, 350.0 });
-        bieg.aktualizuj_tekst(32, {255,255,255}, { 390.0, 330.0 });
+        bieg.aktualizuj_prostokat({ 30.0, 50.0 }, { 30, 30, 30 }, { 255, 255, 255 }, 2, { 15.0, 25.0 }, { 400.0, 350.0 });
+        bieg.aktualizuj_tekst(32, { 255,255,255 }, { 390.0, 330.0 });
+            
 
         //RYSOWANIE OBRAMOWKI OBROTOMIERZA
         Proste_kolo obramowka_rpm;
@@ -196,16 +197,51 @@ int main() {
         bool rezerwa = false;
 
         //------------------------------------------------------------------------DLA TRYBU CYFROWEGO
-        //Obraz obrotomierza
+        //OBROTOMIERZ
         Ladowanie_grafik obrotomierz_cyfrowy(grafika.obrotomierz_cyfrowy_png);
         obrotomierz_cyfrowy.aktualizuj_polozenie({400, 200});
         obrotomierz_cyfrowy.zmiana_wielkosc(0.7);
 
-        //Wskazywanie obrotow
+        //PASEK OBROTOW
         Prosty_prostokat obroty_cyfrowy;
         obroty_cyfrowy.aktualizuj_prostokat({570,60}, {0,255,0}, sf::Color::Transparent, 0, {100,175});
 
- 
+        //WYSWIETLANIE OBROTOW
+        Wyswietlanie l_obroty_cyfrowy(grafika.czcionka);
+        l_obroty_cyfrowy.aktualizuj_tekst(30, { 255, 255, 255 }, { 620.0, 135.0 });
+
+        //BIEG 
+        Wyswietlanie bieg_cyfrowy(grafika.czcionka);
+        bieg_cyfrowy.aktualizuj_tekst(60, { 255,255,255 }, { 360.0, 320.0 });
+        Proste_kolo ramka_biegu;
+        ramka_biegu.aktualizuj_kolo(65, { 255,255,255 }, sf::Color::Transparent, 5, { 382.0, 340.0 });
+        Tekst napis_biegu(grafika.czcionka);
+        napis_biegu.aktualizuj_napis("GEAR", { 360, 290 }, 15, { 255,255,255 });
+     
+        //PREDKOSC
+        Wyswietlanie predkosc_cyfrowy(grafika.czcionka);
+        predkosc_cyfrowy.aktualizuj_tekst(30, { 255,255,255 }, { 190.0, 330.0 });
+        Proste_kolo ramka_predkosci;
+        ramka_predkosci.aktualizuj_kolo(55, { 255,255,255 }, sf::Color::Transparent, 5, { 220, 340 });
+        Tekst napis_predkosci(grafika.czcionka);
+        napis_predkosci.aktualizuj_napis("KM/H", { 200, 300 }, 15, { 255,255,255 });
+
+        //LAP TIMER
+        Wyswietlanie lap_timer(grafika.czcionka);
+        lap_timer.aktualizuj_tekst(30, { 255,255,255 }, { 450.0, 330.0 });
+        Proste_kolo ramka_lap_timer;
+        ramka_lap_timer.aktualizuj_kolo(55, { 255,255,255 }, sf::Color::Transparent, 5, { 540, 340 });
+        Tekst napis_lap_timer(grafika.czcionka);
+        napis_lap_timer.aktualizuj_napis("Lap time", { 500, 300 }, 15, { 255,255,255 });
+
+
+        //TEMP OLEJU
+        Wyswietlanie temp_oleju_cyfrowy(grafika.czcionka);
+        temp_oleju_cyfrowy.aktualizuj_prostokat({ 130.0, 40.0 }, { 10,10,10 }, { 100,100,100 }, 2, { 65.0, 20.0 }, { 340.0, 540.0 });
+        temp_oleju_cyfrowy.aktualizuj_tekst(20, { 255,255,255 }, { 305.0, 530.0 });
+        Tekst napis_olej_cyfrowy(grafika.czcionka);
+        napis_olej_cyfrowy.aktualizuj_napis(" Oil\ntemp", { 220.0, 525.0 }, 15, { 255,255,255 });
+
 
 
         while (window.isOpen()) {
@@ -223,13 +259,13 @@ int main() {
                         float position_x = mousevent->position.x;
                         float position_y = mousevent->position.y;
 
-                        if (wyswietlanie.GETgranice_zdjecia().contains({ position_x, position_y })) {           //sprawdzamy czy myszka zostala kliknieta na granicach zdjecia opcji
+                        if (opcje.GETgranice_zdjecia().contains({ position_x, position_y })) {           //sprawdzamy czy myszka zostala kliknieta na granicach zdjecia opcji
 
-                            wyswietlanie.wlaczanie_menu();
-                            //wyswietlanie.animacja_pokazywania(window);
+                            opcje.wlaczanie_menu();
+              
                         }
                         else {
-                            wyswietlanie.obsluga_klikniecia(position_x, position_y, tryb_cyfrowy);
+                            opcje.obsluga_klikniecia(position_x, position_y, tryb_cyfrowy);
 
                         }
 
@@ -253,21 +289,25 @@ int main() {
                 //ZMIANA KOLORU OBRAMOWKI DLA PREDKOSCI
                 if (AktualnyStan.getPredkosc() >= 0 && AktualnyStan.getPredkosc() <= 50) {
                     predkosc.zmiana_koloru_obramowki(plynna_zmiana_koloru(AktualnyStan.getPredkosc(), 50.0, 0.0, { 50, 205, 50 }, { 255, 255, 0 }));
+                    ramka_predkosci.zmiana_obramowki(plynna_zmiana_koloru(AktualnyStan.getPredkosc(), 50.0, 0.0, { 50, 205, 50 }, { 255, 255, 0 }));
+        
                 }
 
                 else if (AktualnyStan.getPredkosc() > 50 && AktualnyStan.getPredkosc() <= 90) {
                     predkosc.zmiana_koloru_obramowki(plynna_zmiana_koloru(AktualnyStan.getPredkosc(), 90, 50, { 255, 255, 0 }, { 255, 140, 0 }));
+                    ramka_predkosci.zmiana_obramowki(plynna_zmiana_koloru(AktualnyStan.getPredkosc(), 90, 50, { 255, 255, 0 }, { 255, 140, 0 }));
 
                 }
 
                 else if (AktualnyStan.getPredkosc() > 90 && AktualnyStan.getPredkosc() <= 140) {
                     predkosc.zmiana_koloru_obramowki(plynna_zmiana_koloru(AktualnyStan.getPredkosc(), 140, 90, { 255, 140, 0 }, { 255, 20, 147 }));
-
+                    ramka_predkosci.zmiana_obramowki(plynna_zmiana_koloru(AktualnyStan.getPredkosc(), 140, 90, { 255, 140, 0 }, { 255, 20, 147 }));
 
                 }
 
                 else {
                     predkosc.zmiana_koloru_obramowki(plynna_zmiana_koloru(AktualnyStan.getPredkosc(), 220, 141, { 255, 0, 0 }, { 180, 0, 0 }));
+                    ramka_predkosci.zmiana_obramowki(plynna_zmiana_koloru(AktualnyStan.getPredkosc(), 220, 141, { 255, 0, 0 }, { 180, 0, 0 }));
 
                 }
 
@@ -280,7 +320,7 @@ int main() {
                     obramowka_rpm.zmiana_obramowki(plynna_zmiana_koloru(AktualnyStan.getObroty(), 3500, 0, { 50, 205, 50 }, { 255, 140, 0 }));
 
                     obroty_cyfrowy.zmiana_wypelnienia(plynna_zmiana_koloru(AktualnyStan.getObroty(), 3500, 0, { 50, 205, 50 }, { 255, 140, 0 }));
-
+                    ramka_biegu.zmiana_obramowki(plynna_zmiana_koloru(AktualnyStan.getObroty(), 3500, 0, { 50, 205, 50 }, { 255, 140, 0 }));
 
                 }
 
@@ -289,6 +329,7 @@ int main() {
                     obramowka_rpm.zmiana_obramowki(plynna_zmiana_koloru(AktualnyStan.getObroty(), 6000, 3500, { 255, 140, 0 }, { 255, 80, 0 }));
 
                     obroty_cyfrowy.zmiana_wypelnienia(plynna_zmiana_koloru(AktualnyStan.getObroty(), 6000, 3500, { 255, 140, 0 }, { 255, 80, 0 }));
+                    ramka_biegu.zmiana_obramowki(plynna_zmiana_koloru(AktualnyStan.getObroty(), 6000, 3500, { 255, 140, 0 }, { 255, 80, 0 }));
 
 
 
@@ -300,6 +341,8 @@ int main() {
                     obramowka_rpm.zmiana_obramowki(plynna_zmiana_koloru(AktualnyStan.getObroty(), 7000, 6000, { 255, 80, 0 }, { 255, 0, 0 }));
 
                     obroty_cyfrowy.zmiana_wypelnienia(plynna_zmiana_koloru(AktualnyStan.getObroty(), 7000, 6000, { 255, 80, 0 }, { 255, 0, 0 }));
+                    ramka_biegu.zmiana_obramowki(plynna_zmiana_koloru(AktualnyStan.getObroty(), 7000, 6000, { 255, 80, 0 }, { 255, 0, 0 }));
+
 
                 }
 
@@ -309,7 +352,7 @@ int main() {
                         obramowka_rpm.zmiana_obramowki(plynna_zmiana_koloru(AktualnyStan.getObroty(), 8000, 7000, { 255, 0, 0 }, { 255, 0, 0 }));
 
                         obroty_cyfrowy.zmiana_wypelnienia(plynna_zmiana_koloru(AktualnyStan.getObroty(), 8000, 7000, { 255, 0, 0 }, { 255, 0, 0 }));
-
+                        ramka_biegu.zmiana_obramowki(plynna_zmiana_koloru(AktualnyStan.getObroty(), 8000, 7000, { 255, 0, 0 }, { 255, 0, 0 }));
 
                     }
 
@@ -318,6 +361,7 @@ int main() {
                         obramowka_rpm.zmiana_obramowki(sf::Color::Transparent);
 
                         obroty_cyfrowy.zmiana_wypelnienia(sf::Color::Transparent);
+                        ramka_biegu.zmiana_obramowki(sf::Color::Transparent);
 
                     }
                 }
@@ -325,21 +369,27 @@ int main() {
                 //ZMIANA KOLORU OBRAMOWKI DLA TEMPERATURY OLEJU
                 if (AktualnyStan.getTempoleju() >= 0 && AktualnyStan.getTempoleju() < 70) {
                     obramowka_tempoleju.zmiana_obramowki(plynna_zmiana_koloru(AktualnyStan.getTempoleju(), 110, 70, { 0, 0, 255 }, { 0, 150, 255 }));
+                    temp_oleju_cyfrowy.zmiana_koloru_obramowki(plynna_zmiana_koloru(AktualnyStan.getTempoleju(), 110, 70, { 0, 0, 255 }, { 0, 150, 255 }));
                 }
                 else if (AktualnyStan.getTempoleju() >= 70 && AktualnyStan.getTempoleju() < 110) {
                     obramowka_tempoleju.zmiana_obramowki(plynna_zmiana_koloru(AktualnyStan.getTempoleju(), 110, 70, { 0, 150, 255 }, { 50, 205, 50 }));
+                    temp_oleju_cyfrowy.zmiana_koloru_obramowki(plynna_zmiana_koloru(AktualnyStan.getTempoleju(), 110, 70, { 0, 150, 255 }, { 50, 205, 50 }));
 
                 }
                 else if (AktualnyStan.getTempoleju() >= 110 && AktualnyStan.getTempoleju() < 130) {
                     obramowka_tempoleju.zmiana_obramowki(plynna_zmiana_koloru(AktualnyStan.getTempoleju(), 130, 110, { 50, 205, 50 }, { 255, 140, 0 }));
+                    temp_oleju_cyfrowy.zmiana_koloru_obramowki(plynna_zmiana_koloru(AktualnyStan.getTempoleju(), 130, 110, { 50, 205, 50 }, { 255, 140, 0 }));
 
                 }
                 else {
                     if (AktualnyStan.getTempoleju() >= 130 && zegar_dla_migania.getElapsedTime().asMilliseconds() % 500 > 250) {
                         obramowka_tempoleju.zmiana_obramowki(plynna_zmiana_koloru(AktualnyStan.getTempoleju(), 130, 110, { 255, 0, 0 }, { 255, 0, 0 }));
+                        temp_oleju_cyfrowy.zmiana_koloru_obramowki(plynna_zmiana_koloru(AktualnyStan.getTempoleju(), 130, 110, { 255, 0, 0 }, { 255, 0, 0 }));
+
                     }
                     else {
                         obramowka_tempoleju.zmiana_obramowki(sf::Color::Transparent);
+                        temp_oleju_cyfrowy.zmiana_koloru_obramowki(sf::Color::Transparent);
                     }
                 }
 
@@ -379,89 +429,119 @@ int main() {
 
             window.clear(sf::Color(30, 30, 30));
 
+            //WYSWIETLANIE DLA TRYBU ANALAGOWEOG
             if (tryb_cyfrowy == false) {
-
-                //WYSWIETLANIE WSZYSTKIEGO
-                obrotomierz.rysuj(window);
+                
+                //WYSWIETLANIE BIEGU
                 bieg.rysuj(window, AktualnyStan.getGear(), 0, "0");
+
+                //OBROTY DLA ANALOGOWEGO
+                obrotomierz.rysuj(window);
                 obroty.rysuj(window, AktualnyStan.getObroty(), 0, "0");
                 wskazowka_obrotomierz.rysuj(window);
+                obramowka_rpm.rysuj(window);
+                obroty.rysuj(window, AktualnyStan.getObroty(), 0, "0");
 
+                //PREDKOSCIOMIERZ
                 predkosciomierz.rysuj(window);
                 predkosc.rysuj(window, AktualnyStan.getPredkosc(), 0, "0");
                 wskazowka_predkosciomierz.rysuj(window);
 
+                //TEMP OLEJU
                 temperatura_oleju.rysuj(window);
                 wskazowka_tempoleju.rysuj(window);
-
-                cisnienie_oleju.rysuj(window, AktualnyStan.getCisnienie(), 1, " Bar");
-
-                if (AktualnyStan.getCisnienie() >= 2.5 && AktualnyStan.getCisnienie() < 6.7) {
-                    cisnienieoleju_zdj.rysuj(window);
-                    cisnienie_oleju.zmiana_koloru_obramowki({ 0,255,0 });
-                }
-                else if (AktualnyStan.getCisnienie() >= 1.0 && AktualnyStan.getCisnienie() < 2.5) {
-                    wysokie_cisnienieoleju_zdj.rysuj(window);
-                    cisnienie_oleju.zmiana_koloru_obramowki({ 255,165,0 });
-                }
-                else {
-                    if ((AktualnyStan.getCisnienie() < 1.0 && zegar_dla_migania.getElapsedTime().asMilliseconds() % 500 > 250) || (AktualnyStan.getCisnienie() >= 6.7 && zegar_dla_migania.getElapsedTime().asMilliseconds() % 500 > 250)) {
-                        wysokie_cisnienieoleju_zdj.rysuj(window);
-                        cisnienie_oleju.zmiana_koloru_obramowki({ 255,0,0 });
-                    }
-                    else {
-                        cisnienieoleju_zdj.rysuj(window);
-                        cisnienie_oleju.zmiana_koloru_obramowki({ sf::Color::Transparent });
-                    }
-                }
-
-
-                bateria.rysuj(window, AktualnyStan.getBateria(), 1, "V");
-
-                if (AktualnyStan.getBateria() < 12.0) {
-                    bateria_dead_zdj.rysuj(window);
-                    bateria.zmiana_koloru_obramowki({ 255, 0, 0 });
-                }
-                else {
-                    bateria_zdj.rysuj(window);
-                    bateria.zmiana_koloru_obramowki({ 0, 255, 0 });
-                }
-
-                woda.rysuj(window, AktualnyStan.getTempChlodnicy(), 1, "C");
-
-                woda.alarm_gorny(AktualnyStan.getTempChlodnicy(), 110.0, 120.0, zegar_dla_migania, woda_overheat_zdj, woda_zdj, window);
-
                 obramowka_tempoleju.rysuj(window);
-                obramowka_rpm.rysuj(window);
-
-                paliwo_zdj.rysuj(window);
-                obramowka_paliwo.rysuj(window);
-                stan_paliwa.rysuj(window);
-
-                if (rezerwa == true) {
-                    rezerwa_zdj.rysuj(window);
-                }
-
-                dioda_rezerwy.rysuj(window);
-
+                
 
             }
+            //WYSWIETLANIE DLA TRYBU CYFROWEGO
+
             else {
+                //WYSWIETLANIE BIEGU
+                bieg_cyfrowy.rysuj(window, AktualnyStan.getGear(), 0, "0");
+                ramka_biegu.rysuj(window);
+                napis_biegu.rysuj(window);
+
+                //OBROTY DLA CYFROWEGO
                 obroty_cyfrowy.rysuj(window);
                 obrotomierz_cyfrowy.rysuj(window);
 
+                //LICZBA OBROTOW
+                l_obroty_cyfrowy.rysuj(window, AktualnyStan.getObroty(), 0, " RPM");
+
+                //PREDKOSC
+                predkosc_cyfrowy.rysuj(window, AktualnyStan.getPredkosc(), 0, "0");
+                ramka_predkosci.rysuj(window);
+                napis_predkosci.rysuj(window);
+
+                //TEMP OLEJU
+                temp_oleju_cyfrowy.rysuj(window, AktualnyStan.getTempoleju(), 0, " C");
+                napis_olej_cyfrowy.rysuj(window);
+
+                //LAP TIMER
+                lap_timer.rysuj(window, AktualnyStan.getCzas(), 2, "0");
+                napis_lap_timer.rysuj(window);
+                ramka_lap_timer.rysuj(window);
             }
 
+            //DIODY OBROTOW
             for (int i = 0; i < 5; i++) {
                 diody[i].rysuj(window);
             }
 
+            //CZESC WSPOLNA DLA OBU TRYBOW WYSWIETLANIA
             ramka.rysuj(window);
 
-            obroty.rysuj(window, AktualnyStan.getObroty(), 0, "0");
+            //MENU/OPCJE
+            opcje.rysuj_zdj(window);
+            opcje.rysuj_menu(window);
 
-            wyswietlanie.rysuj_zdj(window);
-            wyswietlanie.rysuj_menu(window);
+            //TEMP WODY
+            woda.rysuj(window, AktualnyStan.getTempChlodnicy(), 1, "C");
+            woda.alarm_gorny(AktualnyStan.getTempChlodnicy(), 110.0, 120.0, zegar_dla_migania, woda_overheat_zdj, woda_zdj, window);
+
+            //BATERIA
+            bateria.rysuj(window, AktualnyStan.getBateria(), 1, "V");
+            if (AktualnyStan.getBateria() < 12.0) {
+                bateria_dead_zdj.rysuj(window);
+                bateria.zmiana_koloru_obramowki({ 255, 0, 0 });
+            }
+            else {
+                bateria_zdj.rysuj(window);
+                bateria.zmiana_koloru_obramowki({ 0, 255, 0 });
+            }
+
+            //CISNIENIE OLEJU
+            cisnienie_oleju.rysuj(window, AktualnyStan.getCisnienie(), 1, " Bar");
+            if (AktualnyStan.getCisnienie() >= 2.5 && AktualnyStan.getCisnienie() < 6.7) {
+                cisnienieoleju_zdj.rysuj(window);
+                cisnienie_oleju.zmiana_koloru_obramowki({ 0,255,0 });
+            }
+            else if (AktualnyStan.getCisnienie() >= 1.0 && AktualnyStan.getCisnienie() < 2.5) {
+                wysokie_cisnienieoleju_zdj.rysuj(window);
+                cisnienie_oleju.zmiana_koloru_obramowki({ 255,165,0 });
+            }
+            else {
+                if ((AktualnyStan.getCisnienie() < 1.0 && zegar_dla_migania.getElapsedTime().asMilliseconds() % 500 > 250) || (AktualnyStan.getCisnienie() >= 6.7 && zegar_dla_migania.getElapsedTime().asMilliseconds() % 500 > 250)) {
+                    wysokie_cisnienieoleju_zdj.rysuj(window);
+                    cisnienie_oleju.zmiana_koloru_obramowki({ 255,0,0 });
+                }
+                else {
+                    cisnienieoleju_zdj.rysuj(window);
+                    cisnienie_oleju.zmiana_koloru_obramowki({ sf::Color::Transparent });
+                }
+            }
+            //PALIWO, REZERWA
+            paliwo_zdj.rysuj(window);
+            obramowka_paliwo.rysuj(window);
+            stan_paliwa.rysuj(window);
+            dioda_rezerwy.rysuj(window);
+
+            if (rezerwa == true) {
+                rezerwa_zdj.rysuj(window);
+            }
+
+
 
             window.display();
         }

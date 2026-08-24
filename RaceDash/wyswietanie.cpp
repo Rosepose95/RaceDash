@@ -229,6 +229,18 @@ void Prosty_prostokat::rysuj(sf::RenderWindow& window) {
 	window.draw(prostokat);
 }
 
+//TEKST
+
+void Tekst::aktualizuj_napis(string text, sf::Vector2f SetPostion, int Charactersize, sf::Color Fillcolor) {
+	napis.setString(text);
+	napis.setPosition(SetPostion);
+	napis.setCharacterSize(Charactersize);
+	napis.setFillColor(Fillcolor);
+}
+void Tekst::rysuj(sf::RenderWindow& window) {
+	window.draw(napis);
+}
+
 //---------------------------------------------------------------
 
 //PLYNNA ZMIANA KOLORU
