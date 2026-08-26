@@ -228,9 +228,9 @@ int main() {
 
         //LAP TIMER
         Wyswietlanie lap_timer(grafika.czcionka);
-        lap_timer.aktualizuj_tekst(30, { 255,255,255 }, { 450.0, 330.0 });
+        lap_timer.aktualizuj_tekst(30, { 255,255,255 }, { 500.0, 330.0 });
         Proste_kolo ramka_lap_timer;
-        ramka_lap_timer.aktualizuj_kolo(55, { 255,255,255 }, sf::Color::Transparent, 5, { 540, 340 });
+        ramka_lap_timer.aktualizuj_kolo(60, { 255,255,255 }, sf::Color::Transparent, 5, { 540, 340 });
         Tekst napis_lap_timer(grafika.czcionka);
         napis_lap_timer.aktualizuj_napis("Lap time", { 500, 300 }, 15, { 255,255,255 });
 
@@ -243,8 +243,12 @@ int main() {
         napis_olej_cyfrowy.aktualizuj_napis(" Oil\ntemp", { 220.0, 525.0 }, 15, { 255,255,255 });
 
 
-
         while (window.isOpen()) {
+
+            //POZCYCJA MYSZKI
+            sf::Vector2i poz_myszki = sf::Mouse::getPosition(window);
+            //NAJECHANIE NA GUZIKI
+            opcje.obsluga_najechania(poz_myszki.x, poz_myszki.y);
 
             while (const auto event = window.pollEvent()) {
                 if (event->is<sf::Event::Closed>())                              //sprawdzanie czy kliknieto X w oknie
@@ -262,7 +266,7 @@ int main() {
                         if (opcje.GETgranice_zdjecia().contains({ position_x, position_y })) {           //sprawdzamy czy myszka zostala kliknieta na granicach zdjecia opcji
 
                             opcje.wlaczanie_menu();
-              
+
                         }
                         else {
                             opcje.obsluga_klikniecia(position_x, position_y, tryb_cyfrowy);
@@ -479,7 +483,7 @@ int main() {
                 napis_olej_cyfrowy.rysuj(window);
 
                 //LAP TIMER
-                lap_timer.rysuj(window, AktualnyStan.getCzas(), 2, "0");
+                lap_timer.rysuj(window, AktualnyStan.getCzas()/1000.0f, 1, " s");
                 napis_lap_timer.rysuj(window);
                 ramka_lap_timer.rysuj(window);
             }

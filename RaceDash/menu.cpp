@@ -51,27 +51,47 @@ void Menu::aktualizuj_tlo_napisow(sf::Vector2f Position1, sf::Vector2f Position2
 
 }
 
-void Menu::obsluga_klikniecia(float mysz_x, float mysz_y, bool& tryb){
+void Menu::obsluga_najechania(float mysz_x, float mysz_y){
 
 	if (czy_menu_wysuniete == false) {
 		return;
 
 	}
 	else if (tlo_opcja1.getGlobalBounds().contains({ mysz_x, mysz_y })) {
-		tryb = false;
-		czy_menu_wysuniete = false;
+		tlo_opcja1.setFillColor({ 0,165,0,50});
 		tlo_opcja1.setOutlineColor({ 0,255,0 });
 		tlo_opcja2.setOutlineColor({ 255,0,0 });
+		tlo_opcja2.setFillColor(sf::Color::Transparent);
 
+	}
+	else if (tlo_opcja2.getGlobalBounds().contains({ mysz_x, mysz_y })) {
+		tlo_opcja2.setFillColor({ 0,165,0,50});
+		tlo_opcja2.setOutlineColor({ 0,255,0});
+		tlo_opcja1.setOutlineColor({ 255,0,0 });
+		tlo_opcja1.setFillColor(sf::Color::Transparent);
 
+	}
+}
+
+bool Menu::obsluga_klikniecia(float mysz_x, float mysz_y, bool& tryb) {
+
+	if (czy_menu_wysuniete == false) {
+		return false;
+
+	}
+	else if (tlo_opcja1.getGlobalBounds().contains({ mysz_x, mysz_y })) {
+		tryb = false;
+		czy_menu_wysuniete = false;
+		return true;
 	}
 	else if (tlo_opcja2.getGlobalBounds().contains({ mysz_x, mysz_y })) {
 		tryb = true;
 		czy_menu_wysuniete = false;
-		tlo_opcja2.setOutlineColor({ 0,255,0 });
-		tlo_opcja1.setOutlineColor({ 255,0,0 });
+		return true;
 	}
 }
+
+
 
 void Menu::wlaczanie_menu() {
 	czy_menu_wysuniete = !czy_menu_wysuniete;
@@ -94,5 +114,48 @@ void Menu::rysuj_menu(sf::RenderWindow& window) {
 		window.draw(tlo_opcja2);
 		window.draw(opis);
 	}
+}
+//-------------------------------------------------------------------------
+
+void Button::aktualizuj_wymiary(sf::Vector2f Position, sf::Vector2f Size, sf::Color Fillcolor, sf::Color Outlinecolor, int thickness) {
+	ramka.setPosition({ Position });
+	ramka.setSize({ Size });
+	ramka.setFillColor({ Fillcolor });
+	ramka.setOutlineColor({ Outlinecolor });
+	ramka.setOutlineThickness(thickness);
+
+}
+
+void Button::obsluga_najechania(float mysz_x, float mysz_y) {
+	if (ramka.getGlobalBounds().contains({ mysz_x, mysz_y })) {
+		ramka.setFillColor({ 0,165,0,50 });
+		ramka.setOutlineColor({ 0,255,0 });	
+	}
+	else {
+		ramka.setOutlineColor({ 255,0,0 });
+		ramka.setFillColor({sf::Color::Transparent});
+	}
+}
+
+bool Button::obsluga_klikniecia(float mysz_x, float mysz_y) {
+	if (ramka.getGlobalBounds().contains({ mysz_x, mysz_y })) {
+		return true;
+	}
+	else {
+		return false;
+	}
+}
+
+void Button::set_napis(string n, sf::Vector2f Pozycja, int charactersize) {
+	napis.setString(n);
+	napis.setPosition({ Pozycja });
+	napis.setCharacterSize(charactersize);
+
+}
+
+void Button::rysuj(sf::RenderWindow& window) {
+	window.draw(ramka);
+	window.draw(napis);
+
 }
 
