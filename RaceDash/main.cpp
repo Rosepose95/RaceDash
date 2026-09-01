@@ -242,6 +242,12 @@ int main() {
         Tekst napis_olej_cyfrowy(grafika.czcionka);
         napis_olej_cyfrowy.aktualizuj_napis(" Oil\ntemp", { 220.0, 525.0 }, 15, { 255,255,255 });
 
+        //GUZIK STARTU
+        bool start_klikniete = false;
+
+        Button start_button(grafika.czcionka);
+        start_button.aktualizuj_wymiary({90,120}, {130,50}, sf::Color::Transparent, {165,0,0,200}, 5);
+        start_button.set_napis("Start", { 100,130 }, 30);
 
         while (window.isOpen()) {
 
@@ -249,6 +255,7 @@ int main() {
             sf::Vector2i poz_myszki = sf::Mouse::getPosition(window);
             //NAJECHANIE NA GUZIKI
             opcje.obsluga_najechania(poz_myszki.x, poz_myszki.y);
+            start_button.obsluga_najechania(poz_myszki.x, poz_myszki.y);
 
             while (const auto event = window.pollEvent()) {
                 if (event->is<sf::Event::Closed>())                              //sprawdzanie czy kliknieto X w oknie
@@ -263,7 +270,11 @@ int main() {
                         float position_x = mousevent->position.x;
                         float position_y = mousevent->position.y;
 
-                        if (opcje.GETgranice_zdjecia().contains({ position_x, position_y })) {           //sprawdzamy czy myszka zostala kliknieta na granicach zdjecia opcji
+                        if (start_klikniete == false && start_button.obsluga_klikniecia(position_x, position_y, start_klikniete)) {
+                            zegar_dla_danych.restart();
+                        }
+
+                        else if (opcje.GETgranice_zdjecia().contains({ position_x, position_y })) {           //sprawdzamy czy myszka zostala kliknieta na granicach zdjecia opcji
 
                             opcje.wlaczanie_menu();
 
@@ -277,158 +288,161 @@ int main() {
                 }
             }
             //PETLA AKTUALIZUJACA DANE AZ DO KONCA DANYCH W PLIKU
-            if ((MoznaCzytac == true) && (zegar_dla_danych.getElapsedTime().asMilliseconds() >= 100)) {
-                if (odczyt(logi, AktualnyStan) == false) {                              //jesli skoncza sie dane do czytania koniec programu
-                    cout << "Koniec danych" << endl;
-                    MoznaCzytac = false;
-                }
-
-
-                //UAKTUALNIENIE DANYCH DLA WSKAZOWKI
-                wskazowka_obrotomierz.wyliczanie_kata(AktualnyStan.getObroty());
-                wskazowka_predkosciomierz.wyliczanie_kata(AktualnyStan.getPredkosc());
-                wskazowka_tempoleju.wyliczanie_kata(AktualnyStan.getTempoleju());
-
-
-                //ZMIANA KOLORU OBRAMOWKI DLA PREDKOSCI
-                if (AktualnyStan.getPredkosc() >= 0 && AktualnyStan.getPredkosc() <= 50) {
-                    predkosc.zmiana_koloru_obramowki(plynna_zmiana_koloru(AktualnyStan.getPredkosc(), 50.0, 0.0, { 50, 205, 50 }, { 255, 255, 0 }));
-                    ramka_predkosci.zmiana_obramowki(plynna_zmiana_koloru(AktualnyStan.getPredkosc(), 50.0, 0.0, { 50, 205, 50 }, { 255, 255, 0 }));
-        
-                }
-
-                else if (AktualnyStan.getPredkosc() > 50 && AktualnyStan.getPredkosc() <= 90) {
-                    predkosc.zmiana_koloru_obramowki(plynna_zmiana_koloru(AktualnyStan.getPredkosc(), 90, 50, { 255, 255, 0 }, { 255, 140, 0 }));
-                    ramka_predkosci.zmiana_obramowki(plynna_zmiana_koloru(AktualnyStan.getPredkosc(), 90, 50, { 255, 255, 0 }, { 255, 140, 0 }));
-
-                }
-
-                else if (AktualnyStan.getPredkosc() > 90 && AktualnyStan.getPredkosc() <= 140) {
-                    predkosc.zmiana_koloru_obramowki(plynna_zmiana_koloru(AktualnyStan.getPredkosc(), 140, 90, { 255, 140, 0 }, { 255, 20, 147 }));
-                    ramka_predkosci.zmiana_obramowki(plynna_zmiana_koloru(AktualnyStan.getPredkosc(), 140, 90, { 255, 140, 0 }, { 255, 20, 147 }));
-
-                }
-
-                else {
-                    predkosc.zmiana_koloru_obramowki(plynna_zmiana_koloru(AktualnyStan.getPredkosc(), 220, 141, { 255, 0, 0 }, { 180, 0, 0 }));
-                    ramka_predkosci.zmiana_obramowki(plynna_zmiana_koloru(AktualnyStan.getPredkosc(), 220, 141, { 255, 0, 0 }, { 180, 0, 0 }));
-
-                }
-
-                //WYSWIETLANIE AKTUALNUCH OBROTOW
-                obroty_cyfrowy.poziom_paliwa(8000.0, 0.0, AktualnyStan.getObroty(), 570, 60);
-
-                //ZMIANA KOLORU OBRAMOWKI DLA OBROTOW
-                if (AktualnyStan.getObroty() >= 0 && AktualnyStan.getObroty() <= 3500) {
-                    obroty.zmiana_koloru_obramowki(plynna_zmiana_koloru(AktualnyStan.getObroty(), 3500, 0, { 50, 205, 50 }, { 255, 140, 0 }));
-                    obramowka_rpm.zmiana_obramowki(plynna_zmiana_koloru(AktualnyStan.getObroty(), 3500, 0, { 50, 205, 50 }, { 255, 140, 0 }));
-
-                    obroty_cyfrowy.zmiana_wypelnienia(plynna_zmiana_koloru(AktualnyStan.getObroty(), 3500, 0, { 50, 205, 50 }, { 255, 140, 0 }));
-                    ramka_biegu.zmiana_obramowki(plynna_zmiana_koloru(AktualnyStan.getObroty(), 3500, 0, { 50, 205, 50 }, { 255, 140, 0 }));
-
-                }
-
-                else if (AktualnyStan.getObroty() > 3500 && AktualnyStan.getObroty() <= 6000) {
-                    obroty.zmiana_koloru_obramowki(plynna_zmiana_koloru(AktualnyStan.getObroty(), 6000, 3500, { 255, 140, 0 }, { 255, 80, 0 }));
-                    obramowka_rpm.zmiana_obramowki(plynna_zmiana_koloru(AktualnyStan.getObroty(), 6000, 3500, { 255, 140, 0 }, { 255, 80, 0 }));
-
-                    obroty_cyfrowy.zmiana_wypelnienia(plynna_zmiana_koloru(AktualnyStan.getObroty(), 6000, 3500, { 255, 140, 0 }, { 255, 80, 0 }));
-                    ramka_biegu.zmiana_obramowki(plynna_zmiana_koloru(AktualnyStan.getObroty(), 6000, 3500, { 255, 140, 0 }, { 255, 80, 0 }));
+            if (start_klikniete == true) {
+                if ((MoznaCzytac == true) && (zegar_dla_danych.getElapsedTime().asMilliseconds() >= 100)) {
+                    if (odczyt(logi, AktualnyStan) == false) {                              //jesli skoncza sie dane do czytania koniec programu
+                        cout << "Koniec danych" << endl;
+                        MoznaCzytac = false;
+                    }
 
 
 
-
-                }
-
-                else if (AktualnyStan.getObroty() > 6000 && AktualnyStan.getObroty() < 7000) {
-                    obroty.zmiana_koloru_obramowki(plynna_zmiana_koloru(AktualnyStan.getObroty(), 7000, 6000, { 255, 80, 0 }, { 255, 0, 0 }));
-                    obramowka_rpm.zmiana_obramowki(plynna_zmiana_koloru(AktualnyStan.getObroty(), 7000, 6000, { 255, 80, 0 }, { 255, 0, 0 }));
-
-                    obroty_cyfrowy.zmiana_wypelnienia(plynna_zmiana_koloru(AktualnyStan.getObroty(), 7000, 6000, { 255, 80, 0 }, { 255, 0, 0 }));
-                    ramka_biegu.zmiana_obramowki(plynna_zmiana_koloru(AktualnyStan.getObroty(), 7000, 6000, { 255, 80, 0 }, { 255, 0, 0 }));
+                    //UAKTUALNIENIE DANYCH DLA WSKAZOWKI
+                    wskazowka_obrotomierz.wyliczanie_kata(AktualnyStan.getObroty());
+                    wskazowka_predkosciomierz.wyliczanie_kata(AktualnyStan.getPredkosc());
+                    wskazowka_tempoleju.wyliczanie_kata(AktualnyStan.getTempoleju());
 
 
-                }
+                    //ZMIANA KOLORU OBRAMOWKI DLA PREDKOSCI
+                    if (AktualnyStan.getPredkosc() >= 0 && AktualnyStan.getPredkosc() <= 50) {
+                        predkosc.zmiana_koloru_obramowki(plynna_zmiana_koloru(AktualnyStan.getPredkosc(), 50.0, 0.0, { 50, 205, 50 }, { 255, 255, 0 }));
+                        ramka_predkosci.zmiana_obramowki(plynna_zmiana_koloru(AktualnyStan.getPredkosc(), 50.0, 0.0, { 50, 205, 50 }, { 255, 255, 0 }));
 
-                else {
-                    if (AktualnyStan.getObroty() >= 7000 && AktualnyStan.getObroty() <= 8000 && zegar_dla_migania.getElapsedTime().asMilliseconds() % 500 > 250) {
-                        obroty.zmiana_koloru_obramowki(plynna_zmiana_koloru(AktualnyStan.getObroty(), 8000, 7000, { 255, 0, 0 }, { 255, 0, 0 }));
-                        obramowka_rpm.zmiana_obramowki(plynna_zmiana_koloru(AktualnyStan.getObroty(), 8000, 7000, { 255, 0, 0 }, { 255, 0, 0 }));
+                    }
 
-                        obroty_cyfrowy.zmiana_wypelnienia(plynna_zmiana_koloru(AktualnyStan.getObroty(), 8000, 7000, { 255, 0, 0 }, { 255, 0, 0 }));
-                        ramka_biegu.zmiana_obramowki(plynna_zmiana_koloru(AktualnyStan.getObroty(), 8000, 7000, { 255, 0, 0 }, { 255, 0, 0 }));
+                    else if (AktualnyStan.getPredkosc() > 50 && AktualnyStan.getPredkosc() <= 90) {
+                        predkosc.zmiana_koloru_obramowki(plynna_zmiana_koloru(AktualnyStan.getPredkosc(), 90, 50, { 255, 255, 0 }, { 255, 140, 0 }));
+                        ramka_predkosci.zmiana_obramowki(plynna_zmiana_koloru(AktualnyStan.getPredkosc(), 90, 50, { 255, 255, 0 }, { 255, 140, 0 }));
+
+                    }
+
+                    else if (AktualnyStan.getPredkosc() > 90 && AktualnyStan.getPredkosc() <= 140) {
+                        predkosc.zmiana_koloru_obramowki(plynna_zmiana_koloru(AktualnyStan.getPredkosc(), 140, 90, { 255, 140, 0 }, { 255, 20, 147 }));
+                        ramka_predkosci.zmiana_obramowki(plynna_zmiana_koloru(AktualnyStan.getPredkosc(), 140, 90, { 255, 140, 0 }, { 255, 20, 147 }));
 
                     }
 
                     else {
-                        obroty.zmiana_koloru_obramowki(sf::Color::Transparent);
-                        obramowka_rpm.zmiana_obramowki(sf::Color::Transparent);
-
-                        obroty_cyfrowy.zmiana_wypelnienia(sf::Color::Transparent);
-                        ramka_biegu.zmiana_obramowki(sf::Color::Transparent);
+                        predkosc.zmiana_koloru_obramowki(plynna_zmiana_koloru(AktualnyStan.getPredkosc(), 220, 141, { 255, 0, 0 }, { 180, 0, 0 }));
+                        ramka_predkosci.zmiana_obramowki(plynna_zmiana_koloru(AktualnyStan.getPredkosc(), 220, 141, { 255, 0, 0 }, { 180, 0, 0 }));
 
                     }
-                }
 
-                //ZMIANA KOLORU OBRAMOWKI DLA TEMPERATURY OLEJU
-                if (AktualnyStan.getTempoleju() >= 0 && AktualnyStan.getTempoleju() < 70) {
-                    obramowka_tempoleju.zmiana_obramowki(plynna_zmiana_koloru(AktualnyStan.getTempoleju(), 110, 70, { 0, 0, 255 }, { 0, 150, 255 }));
-                    temp_oleju_cyfrowy.zmiana_koloru_obramowki(plynna_zmiana_koloru(AktualnyStan.getTempoleju(), 110, 70, { 0, 0, 255 }, { 0, 150, 255 }));
-                }
-                else if (AktualnyStan.getTempoleju() >= 70 && AktualnyStan.getTempoleju() < 110) {
-                    obramowka_tempoleju.zmiana_obramowki(plynna_zmiana_koloru(AktualnyStan.getTempoleju(), 110, 70, { 0, 150, 255 }, { 50, 205, 50 }));
-                    temp_oleju_cyfrowy.zmiana_koloru_obramowki(plynna_zmiana_koloru(AktualnyStan.getTempoleju(), 110, 70, { 0, 150, 255 }, { 50, 205, 50 }));
+                    //WYSWIETLANIE AKTUALNUCH OBROTOW
+                    obroty_cyfrowy.poziom_paliwa(8000.0, 0.0, AktualnyStan.getObroty(), 570, 60);
 
-                }
-                else if (AktualnyStan.getTempoleju() >= 110 && AktualnyStan.getTempoleju() < 130) {
-                    obramowka_tempoleju.zmiana_obramowki(plynna_zmiana_koloru(AktualnyStan.getTempoleju(), 130, 110, { 50, 205, 50 }, { 255, 140, 0 }));
-                    temp_oleju_cyfrowy.zmiana_koloru_obramowki(plynna_zmiana_koloru(AktualnyStan.getTempoleju(), 130, 110, { 50, 205, 50 }, { 255, 140, 0 }));
+                    //ZMIANA KOLORU OBRAMOWKI DLA OBROTOW
+                    if (AktualnyStan.getObroty() >= 0 && AktualnyStan.getObroty() <= 3500) {
+                        obroty.zmiana_koloru_obramowki(plynna_zmiana_koloru(AktualnyStan.getObroty(), 3500, 0, { 50, 205, 50 }, { 255, 140, 0 }));
+                        obramowka_rpm.zmiana_obramowki(plynna_zmiana_koloru(AktualnyStan.getObroty(), 3500, 0, { 50, 205, 50 }, { 255, 140, 0 }));
 
-                }
-                else {
-                    if (AktualnyStan.getTempoleju() >= 130 && zegar_dla_migania.getElapsedTime().asMilliseconds() % 500 > 250) {
-                        obramowka_tempoleju.zmiana_obramowki(plynna_zmiana_koloru(AktualnyStan.getTempoleju(), 130, 110, { 255, 0, 0 }, { 255, 0, 0 }));
-                        temp_oleju_cyfrowy.zmiana_koloru_obramowki(plynna_zmiana_koloru(AktualnyStan.getTempoleju(), 130, 110, { 255, 0, 0 }, { 255, 0, 0 }));
+                        obroty_cyfrowy.zmiana_wypelnienia(plynna_zmiana_koloru(AktualnyStan.getObroty(), 3500, 0, { 50, 205, 50 }, { 255, 140, 0 }));
+                        ramka_biegu.zmiana_obramowki(plynna_zmiana_koloru(AktualnyStan.getObroty(), 3500, 0, { 50, 205, 50 }, { 255, 140, 0 }));
+
+                    }
+
+                    else if (AktualnyStan.getObroty() > 3500 && AktualnyStan.getObroty() <= 6000) {
+                        obroty.zmiana_koloru_obramowki(plynna_zmiana_koloru(AktualnyStan.getObroty(), 6000, 3500, { 255, 140, 0 }, { 255, 80, 0 }));
+                        obramowka_rpm.zmiana_obramowki(plynna_zmiana_koloru(AktualnyStan.getObroty(), 6000, 3500, { 255, 140, 0 }, { 255, 80, 0 }));
+
+                        obroty_cyfrowy.zmiana_wypelnienia(plynna_zmiana_koloru(AktualnyStan.getObroty(), 6000, 3500, { 255, 140, 0 }, { 255, 80, 0 }));
+                        ramka_biegu.zmiana_obramowki(plynna_zmiana_koloru(AktualnyStan.getObroty(), 6000, 3500, { 255, 140, 0 }, { 255, 80, 0 }));
+
+
+
+
+                    }
+
+                    else if (AktualnyStan.getObroty() > 6000 && AktualnyStan.getObroty() < 7000) {
+                        obroty.zmiana_koloru_obramowki(plynna_zmiana_koloru(AktualnyStan.getObroty(), 7000, 6000, { 255, 80, 0 }, { 255, 0, 0 }));
+                        obramowka_rpm.zmiana_obramowki(plynna_zmiana_koloru(AktualnyStan.getObroty(), 7000, 6000, { 255, 80, 0 }, { 255, 0, 0 }));
+
+                        obroty_cyfrowy.zmiana_wypelnienia(plynna_zmiana_koloru(AktualnyStan.getObroty(), 7000, 6000, { 255, 80, 0 }, { 255, 0, 0 }));
+                        ramka_biegu.zmiana_obramowki(plynna_zmiana_koloru(AktualnyStan.getObroty(), 7000, 6000, { 255, 80, 0 }, { 255, 0, 0 }));
+
+
+                    }
+
+                    else {
+                        if (AktualnyStan.getObroty() >= 7000 && AktualnyStan.getObroty() <= 8000 && zegar_dla_migania.getElapsedTime().asMilliseconds() % 500 > 250) {
+                            obroty.zmiana_koloru_obramowki(plynna_zmiana_koloru(AktualnyStan.getObroty(), 8000, 7000, { 255, 0, 0 }, { 255, 0, 0 }));
+                            obramowka_rpm.zmiana_obramowki(plynna_zmiana_koloru(AktualnyStan.getObroty(), 8000, 7000, { 255, 0, 0 }, { 255, 0, 0 }));
+
+                            obroty_cyfrowy.zmiana_wypelnienia(plynna_zmiana_koloru(AktualnyStan.getObroty(), 8000, 7000, { 255, 0, 0 }, { 255, 0, 0 }));
+                            ramka_biegu.zmiana_obramowki(plynna_zmiana_koloru(AktualnyStan.getObroty(), 8000, 7000, { 255, 0, 0 }, { 255, 0, 0 }));
+
+                        }
+
+                        else {
+                            obroty.zmiana_koloru_obramowki(sf::Color::Transparent);
+                            obramowka_rpm.zmiana_obramowki(sf::Color::Transparent);
+
+                            obroty_cyfrowy.zmiana_wypelnienia(sf::Color::Transparent);
+                            ramka_biegu.zmiana_obramowki(sf::Color::Transparent);
+
+                        }
+                    }
+
+                    //ZMIANA KOLORU OBRAMOWKI DLA TEMPERATURY OLEJU
+                    if (AktualnyStan.getTempoleju() >= 0 && AktualnyStan.getTempoleju() < 70) {
+                        obramowka_tempoleju.zmiana_obramowki(plynna_zmiana_koloru(AktualnyStan.getTempoleju(), 110, 70, { 0, 0, 255 }, { 0, 150, 255 }));
+                        temp_oleju_cyfrowy.zmiana_koloru_obramowki(plynna_zmiana_koloru(AktualnyStan.getTempoleju(), 110, 70, { 0, 0, 255 }, { 0, 150, 255 }));
+                    }
+                    else if (AktualnyStan.getTempoleju() >= 70 && AktualnyStan.getTempoleju() < 110) {
+                        obramowka_tempoleju.zmiana_obramowki(plynna_zmiana_koloru(AktualnyStan.getTempoleju(), 110, 70, { 0, 150, 255 }, { 50, 205, 50 }));
+                        temp_oleju_cyfrowy.zmiana_koloru_obramowki(plynna_zmiana_koloru(AktualnyStan.getTempoleju(), 110, 70, { 0, 150, 255 }, { 50, 205, 50 }));
+
+                    }
+                    else if (AktualnyStan.getTempoleju() >= 110 && AktualnyStan.getTempoleju() < 130) {
+                        obramowka_tempoleju.zmiana_obramowki(plynna_zmiana_koloru(AktualnyStan.getTempoleju(), 130, 110, { 50, 205, 50 }, { 255, 140, 0 }));
+                        temp_oleju_cyfrowy.zmiana_koloru_obramowki(plynna_zmiana_koloru(AktualnyStan.getTempoleju(), 130, 110, { 50, 205, 50 }, { 255, 140, 0 }));
 
                     }
                     else {
-                        obramowka_tempoleju.zmiana_obramowki(sf::Color::Transparent);
-                        temp_oleju_cyfrowy.zmiana_koloru_obramowki(sf::Color::Transparent);
+                        if (AktualnyStan.getTempoleju() >= 130 && zegar_dla_migania.getElapsedTime().asMilliseconds() % 500 > 250) {
+                            obramowka_tempoleju.zmiana_obramowki(plynna_zmiana_koloru(AktualnyStan.getTempoleju(), 130, 110, { 255, 0, 0 }, { 255, 0, 0 }));
+                            temp_oleju_cyfrowy.zmiana_koloru_obramowki(plynna_zmiana_koloru(AktualnyStan.getTempoleju(), 130, 110, { 255, 0, 0 }, { 255, 0, 0 }));
+
+                        }
+                        else {
+                            obramowka_tempoleju.zmiana_obramowki(sf::Color::Transparent);
+                            temp_oleju_cyfrowy.zmiana_koloru_obramowki(sf::Color::Transparent);
+                        }
                     }
-                }
 
-                //ZMIANA KOLOROW DIOD
-                for (int i = 0; i < 5; i++) {
-                    if (AktualnyStan.getObroty() >= wartosc_obrotow[i] && AktualnyStan.getObroty() < 7000.0) {
-                        diody[i].zmiana_wypelnienia(kolory[i]);
+                    //ZMIANA KOLOROW DIOD
+                    for (int i = 0; i < 5; i++) {
+                        if (AktualnyStan.getObroty() >= wartosc_obrotow[i] && AktualnyStan.getObroty() < 7000.0) {
+                            diody[i].zmiana_wypelnienia(kolory[i]);
+                        }
+                        else if (AktualnyStan.getObroty() >= 7000 && AktualnyStan.getObroty() <= 8000 && zegar_dla_migania.getElapsedTime().asMilliseconds() % 500 > 250) {
+                            diody[i].zmiana_wypelnienia({ 255,0,0 });
+                        }
+                        else {
+                            diody[i].zmiana_wypelnienia({ 40,40,40 });
+                        }
                     }
-                    else if (AktualnyStan.getObroty() >= 7000 && AktualnyStan.getObroty() <= 8000 && zegar_dla_migania.getElapsedTime().asMilliseconds() % 500 > 250) {
-                        diody[i].zmiana_wypelnienia({ 255,0,0 });
+
+                    //WYSWIETLANIE POZIOMU PALIWA
+                    stan_paliwa.poziom_paliwa(100.0, 0.0, AktualnyStan.getFuel(), 100.0, 30.0);
+
+                    if (AktualnyStan.getFuel() >= 0.0 && AktualnyStan.getFuel() < 15.0) {
+                        stan_paliwa.zmiana_wypelnienia({ 255,0,0 });
+                        rezerwa = true;
+
+
                     }
-                    else {
-                        diody[i].zmiana_wypelnienia({ 40,40,40 });
+                    else if (AktualnyStan.getFuel() >= 15.0 && AktualnyStan.getFuel() < 40.0) {
+                        stan_paliwa.zmiana_wypelnienia(plynna_zmiana_koloru(AktualnyStan.getFuel(), 40.0, 15.0, { 255,0,0 }, { 255, 220, 0 }));
+                        rezerwa = false;
                     }
+                    else if (AktualnyStan.getFuel() >= 40.0) {
+                        stan_paliwa.zmiana_wypelnienia(plynna_zmiana_koloru(AktualnyStan.getFuel(), 100.0, 40.0, { 255, 220, 0 }, { 50, 205, 50 }));
+                        rezerwa = false;
+                    }
+
+                    zegar_dla_danych.restart();
                 }
-
-                //WYSWIETLANIE POZIOMU PALIWA
-                stan_paliwa.poziom_paliwa(100.0, 0.0, AktualnyStan.getFuel(), 100.0, 30.0);
-
-                if (AktualnyStan.getFuel() >= 0.0 && AktualnyStan.getFuel() < 15.0) {
-                    stan_paliwa.zmiana_wypelnienia({ 255,0,0 });
-                    rezerwa = true;
-
-
-                }
-                else if (AktualnyStan.getFuel() >= 15.0 && AktualnyStan.getFuel() < 40.0) {
-                    stan_paliwa.zmiana_wypelnienia(plynna_zmiana_koloru(AktualnyStan.getFuel(), 40.0, 15.0, { 255,0,0 }, { 255, 220, 0 }));
-                    rezerwa = false;
-                }
-                else if (AktualnyStan.getFuel() >= 40.0) {
-                    stan_paliwa.zmiana_wypelnienia(plynna_zmiana_koloru(AktualnyStan.getFuel(), 100.0, 40.0, { 255, 220, 0 }, { 50, 205, 50 }));
-                    rezerwa = false;
-                }
-
-                zegar_dla_danych.restart();
             }
 
             window.clear(sf::Color(30, 30, 30));
@@ -545,7 +559,9 @@ int main() {
                 rezerwa_zdj.rysuj(window);
             }
 
-
+            if (start_klikniete == false) {
+                start_button.rysuj(window);
+            }
 
             window.display();
         }

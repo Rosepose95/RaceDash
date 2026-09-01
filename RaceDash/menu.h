@@ -45,7 +45,7 @@ public:
 
 	void aktualizuj_wymiary(sf::Vector2f Position, sf::Vector2f Size, sf::Color Fillcolor, sf::Color Outlinecolor, int thickness);
 	void obsluga_najechania(float mysz_x, float mysz_y);
-	bool obsluga_klikniecia(float mysz_x, float mysz_y);
+	bool obsluga_klikniecia(float mysz_x, float mysz_y, bool &tryb);
 	void set_napis(string napis, sf::Vector2f Pozycja, int charactersize);
 	void rysuj(sf::RenderWindow& window);
 
