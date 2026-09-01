@@ -29,9 +29,9 @@ public:
 
 class Pojazd : private DaneSilnika, private DanePojazdu {
 
-	float czas;
-	float paliwo;
-	float cisnienie_oleju;
+	float czas = 0.0;
+	float paliwo = 0.0;
+	float cisnienie_oleju = 0.0;
 
 public:
 	Pojazd(float t, float to, float o, float tc, float p, float b, float gear, float f, float c): cisnienie_oleju(c), czas(t), paliwo(f), DaneSilnika(to, o, tc), DanePojazdu(p, b, gear) {}

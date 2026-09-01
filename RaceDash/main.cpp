@@ -246,8 +246,16 @@ int main() {
         bool start_klikniete = false;
 
         Button start_button(grafika.czcionka);
-        start_button.aktualizuj_wymiary({90,120}, {130,50}, sf::Color::Transparent, {165,0,0,200}, 5);
-        start_button.set_napis("Start", { 100,130 }, 30);
+        start_button.aktualizuj_wymiary({20,30}, {90,40}, sf::Color::Transparent, {165,0,0,200}, 5);
+        start_button.set_napis("Start", { 30,40 }, 20);
+
+        //GUZIK STOP
+        bool stop_klikniete = true;
+
+        Button stop_button(grafika.czcionka);
+        stop_button.aktualizuj_wymiary({ 20,30 }, { 90,40 }, sf::Color::Transparent, { 165,0,0,200 }, 5);
+        stop_button.set_napis("Stop", { 30,40 }, 20);
+
 
         while (window.isOpen()) {
 
@@ -256,6 +264,7 @@ int main() {
             //NAJECHANIE NA GUZIKI
             opcje.obsluga_najechania(poz_myszki.x, poz_myszki.y);
             start_button.obsluga_najechania(poz_myszki.x, poz_myszki.y);
+            stop_button.obsluga_najechania(poz_myszki.x, poz_myszki.y);
 
             while (const auto event = window.pollEvent()) {
                 if (event->is<sf::Event::Closed>())                              //sprawdzanie czy kliknieto X w oknie
@@ -270,7 +279,11 @@ int main() {
                         float position_x = mousevent->position.x;
                         float position_y = mousevent->position.y;
 
-                        if (start_klikniete == false && start_button.obsluga_klikniecia(position_x, position_y, start_klikniete)) {
+                        if (stop_klikniete == false && stop_button.obsluga_klikniecia(position_x, position_y, stop_klikniete)) {
+                            start_klikniete = false;
+                        }
+                        else if (start_klikniete == false && start_button.obsluga_klikniecia(position_x, position_y, start_klikniete)) {
+                            stop_klikniete = false;
                             zegar_dla_danych.restart();
                         }
 
@@ -561,6 +574,10 @@ int main() {
 
             if (start_klikniete == false) {
                 start_button.rysuj(window);
+            }
+
+            if (stop_klikniete == false) {
+                stop_button.rysuj(window);
             }
 
             window.display();

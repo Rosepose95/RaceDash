@@ -49,5 +49,4 @@ public:
 	void set_napis(string napis, sf::Vector2f Pozycja, int charactersize);
 	void rysuj(sf::RenderWindow& window);
 
-
 };

@@ -139,7 +139,7 @@ void Button::obsluga_najechania(float mysz_x, float mysz_y) {
 
 bool Button::obsluga_klikniecia(float mysz_x, float mysz_y, bool& tryb) {
 	if (ramka.getGlobalBounds().contains({ mysz_x, mysz_y })) {
-		tryb = true;
+		tryb = !tryb;
 		return true;
 	}
 	else {
