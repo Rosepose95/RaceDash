@@ -4,7 +4,7 @@
 
 using namespace std;
 
-void Menu::aktualizuj_wymiary(sf::Vector2f Position, sf::Vector2f Size, sf::Color Fillcolor, sf::Color Outlinecolor, int thickness) {
+void Menu::aktualizuj_wymiary_ramki(sf::Vector2f Position, sf::Vector2f Size, sf::Color Fillcolor, sf::Color Outlinecolor, int thickness){
 
 	ramka.setPosition({ Position });
 	ramka.setSize({ Size });
@@ -18,59 +18,29 @@ void Menu::wymiary_zdj(sf::Vector2f Positon, float skala) {
 	zdj.setScale(sf::Vector2f(skala,skala));
 }
 
-void Menu::set_tekst(string tekst_opcja1, sf::Vector2f Pozycja1, string tekst_opcja2, sf::Vector2f Pozycja2, string tekst_opis, sf::Vector2f Pozycja3, int charactersize){
+void Menu::aktualizuj_wymiary_guzikow(sf::Vector2f Position1, sf::Vector2f Position2, sf::Vector2f Size, sf::Color Fillcolor, sf::Color Outlinecolor, int thickness) {
 
-	Opcja1.setString(tekst_opcja1);
-	Opcja1.setCharacterSize(charactersize);
-	Opcja1.setPosition({ Pozycja1 });
+	Opcja1.aktualizuj_wymiary({ Position1 }, { Size }, { Fillcolor }, { Outlinecolor }, thickness);
+	Opcja2.aktualizuj_wymiary({ Position2 }, { Size }, { Fillcolor }, { Outlinecolor }, thickness);
 
-	Opcja2.setString(tekst_opcja2);
-	Opcja2.setCharacterSize(charactersize);
-	Opcja2.setPosition({ Pozycja2 });
+}
+void Menu::set_text(string napis1, string napis2, string napis3, sf::Vector2f Pozycja1, sf::Vector2f Pozycja2, sf::Vector2f Pozycja3, int charactersize) {
 
-	opis.setString(tekst_opis);
-	opis.setCharacterSize(charactersize);
+	Opcja1.set_napis(napis1, { Pozycja1 }, charactersize);
+	Opcja2.set_napis(napis2, { Pozycja2 }, charactersize);
+	opis.setString(napis3);
 	opis.setPosition({ Pozycja3 });
-
+	opis.setCharacterSize(charactersize);
 }
-
-void Menu::aktualizuj_tlo_napisow(sf::Vector2f Position1, sf::Vector2f Position2, sf::Vector2f Size, sf::Color Fillcolor, sf::Color Outlinecolor1, sf::Color Outlinecolor2, int thickness) {
-
-	tlo_opcja1.setPosition({ Position1 });
-	tlo_opcja1.setSize({ Size });
-	tlo_opcja1.setFillColor(Fillcolor);
-	tlo_opcja1.setOutlineColor(Outlinecolor1);
-	tlo_opcja1.setOutlineThickness(thickness);
-
-	tlo_opcja2.setPosition({ Position2 });
-	tlo_opcja2.setSize({ Size });
-	tlo_opcja2.setFillColor(Fillcolor);
-	tlo_opcja2.setOutlineColor(Outlinecolor2);
-	tlo_opcja2.setOutlineThickness(thickness);
-
-
-}
-
 void Menu::obsluga_najechania(float mysz_x, float mysz_y){
 
 	if (czy_menu_wysuniete == false) {
 		return;
 
 	}
-	else if (tlo_opcja1.getGlobalBounds().contains({ mysz_x, mysz_y })) {
-		tlo_opcja1.setFillColor({ 0,165,0,50});
-		tlo_opcja1.setOutlineColor({ 0,255,0 });
-		tlo_opcja2.setOutlineColor({ 255,0,0 });
-		tlo_opcja2.setFillColor(sf::Color::Transparent);
+	Opcja1.obsluga_najechania(mysz_x, mysz_y);
+	Opcja2.obsluga_najechania(mysz_x, mysz_y);
 
-	}
-	else if (tlo_opcja2.getGlobalBounds().contains({ mysz_x, mysz_y })) {
-		tlo_opcja2.setFillColor({ 0,165,0,50});
-		tlo_opcja2.setOutlineColor({ 0,255,0});
-		tlo_opcja1.setOutlineColor({ 255,0,0 });
-		tlo_opcja1.setFillColor(sf::Color::Transparent);
-
-	}
 }
 
 bool Menu::obsluga_klikniecia(float mysz_x, float mysz_y, bool& tryb) {
@@ -79,17 +49,12 @@ bool Menu::obsluga_klikniecia(float mysz_x, float mysz_y, bool& tryb) {
 		return false;
 
 	}
-	else if (tlo_opcja1.getGlobalBounds().contains({ mysz_x, mysz_y })) {
-		tryb = false;
-		czy_menu_wysuniete = false;
-		return true;
-	}
-	else if (tlo_opcja2.getGlobalBounds().contains({ mysz_x, mysz_y })) {
-		tryb = true;
-		czy_menu_wysuniete = false;
-		return true;
-	}
+
+	Opcja1.obsluga_klikniecia(mysz_x, mysz_y, tryb);
+	Opcja2.obsluga_klikniecia(mysz_x, mysz_y, tryb);
+	czy_menu_wysuniete = false;
 }
+
 
 
 
@@ -108,10 +73,8 @@ void Menu::rysuj_zdj(sf::RenderWindow& window) {
 void Menu::rysuj_menu(sf::RenderWindow& window) {
 	if (czy_menu_wysuniete == true) {
 		window.draw(ramka);
-		window.draw(Opcja1);
-		window.draw(tlo_opcja1);
-		window.draw(Opcja2);
-		window.draw(tlo_opcja2);
+		Opcja1.rysuj(window);
+		Opcja2.rysuj(window);
 		window.draw(opis);
 	}
 }
@@ -143,7 +106,6 @@ bool Button::obsluga_klikniecia(float mysz_x, float mysz_y, bool& tryb) {
 		return true;
 	}
 	else {
-		tryb = false;
 		return false;
 
 	}
