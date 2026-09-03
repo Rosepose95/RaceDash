@@ -27,10 +27,10 @@ public:
 class Ladowanie_grafik {
 	sf::Sprite lokalizacja;
 
-	float maxwartosc;
-	float minwartosc;
-	float katstartowy;
-	float katkoncowy;
+	float maxwartosc=0.0;
+	float minwartosc=0.0;
+	float katstartowy=0.0;
+	float katkoncowy=0.0;
 
 public:
 	Ladowanie_grafik(sf::Texture& zdjecie) : lokalizacja(zdjecie){}
