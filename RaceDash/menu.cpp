@@ -18,16 +18,19 @@ void Menu::wymiary_zdj(sf::Vector2f Positon, float skala) {
 	zdj.setScale(sf::Vector2f(skala,skala));
 }
 
-void Menu::aktualizuj_wymiary_guzikow(sf::Vector2f Position1, sf::Vector2f Position2, sf::Vector2f Size, sf::Color Fillcolor, sf::Color Outlinecolor, int thickness) {
+void Menu::aktualizuj_wymiary_guzikow(sf::Vector2f Position1, sf::Vector2f Position2, sf::Vector2f Position3, sf::Vector2f Size, sf::Color Fillcolor, sf::Color Outlinecolor, int thickness) {
 
 	Opcja1.aktualizuj_wymiary({ Position1 }, { Size }, { Fillcolor }, { Outlinecolor }, thickness);
 	Opcja2.aktualizuj_wymiary({ Position2 }, { Size }, { Fillcolor }, { Outlinecolor }, thickness);
+	Wczytaj.aktualizuj_wymiary({ Position3 }, { Size }, { Fillcolor }, { Outlinecolor }, thickness);
 
 }
-void Menu::set_text(string napis1, string napis2, string napis3, sf::Vector2f Pozycja1, sf::Vector2f Pozycja2, sf::Vector2f Pozycja3, int charactersize) {
+void Menu::set_text(string napis1, string napis2, string napis3, string napis4, sf::Vector2f Pozycja1, sf::Vector2f Pozycja2, sf::Vector2f Pozycja3, sf::Vector2f Pozycja4, int charactersize) {
 
 	Opcja1.set_napis(napis1, { Pozycja1 }, charactersize);
 	Opcja2.set_napis(napis2, { Pozycja2 }, charactersize);
+	Wczytaj.set_napis(napis4, { Pozycja4 }, charactersize);
+
 	opis.setString(napis3);
 	opis.setPosition({ Pozycja3 });
 	opis.setCharacterSize(charactersize);
@@ -40,10 +43,11 @@ void Menu::obsluga_najechania(float mysz_x, float mysz_y){
 	}
 	Opcja1.obsluga_najechania(mysz_x, mysz_y);
 	Opcja2.obsluga_najechania(mysz_x, mysz_y);
+	Wczytaj.obsluga_najechania(mysz_x, mysz_y);
 
 }
 
-bool Menu::obsluga_klikniecia(float mysz_x, float mysz_y, bool& tryb) {
+bool Menu::obsluga_klikniecia(float mysz_x, float mysz_y, bool& tryb, bool& tryb2) {
 
 	if (czy_menu_wysuniete == false) {
 		return false;
@@ -52,6 +56,8 @@ bool Menu::obsluga_klikniecia(float mysz_x, float mysz_y, bool& tryb) {
 
 	Opcja1.obsluga_klikniecia(mysz_x, mysz_y, tryb);
 	Opcja2.obsluga_klikniecia(mysz_x, mysz_y, tryb);
+	Wczytaj.obsluga_klikniecia(mysz_x, mysz_y, tryb2);
+
 	czy_menu_wysuniete = false;
 }
 
@@ -75,6 +81,7 @@ void Menu::rysuj_menu(sf::RenderWindow& window) {
 		window.draw(ramka);
 		Opcja1.rysuj(window);
 		Opcja2.rysuj(window);
+		Wczytaj.rysuj(window);
 		window.draw(opis);
 	}
 }

@@ -54,5 +54,7 @@ public:
 
 };
 
+string wybierz_plik();
 
 bool odczyt(std::fstream& logi, Pojazd& AktualnyStan);
+

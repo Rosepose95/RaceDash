@@ -9,9 +9,9 @@ void All_objects::utworzenie_obiektow() {
 
     tryb_cyfrowy = false;
     opcje.wymiary_zdj({ 730,30 }, 0.07);
-    opcje.aktualizuj_wymiary_ramki({ 630,10 }, { 160,150 }, { 0,0,0,125 }, { 255,0,0 }, 5);
-    opcje.aktualizuj_wymiary_guzikow({ 645,70 }, { 645, 120 }, { 130,30 }, sf::Color::Transparent, { 255,0,0 }, 2);
-    opcje.set_text("Zegary analogowe", "Zegary cyfrowe", "Menu", { 650,80 }, { 650, 130 }, { 635,20 }, 10);
+    opcje.aktualizuj_wymiary_ramki({ 630,10 }, { 160,200 }, { 0,0,0,125 }, { 255,0,0 }, 5);
+    opcje.aktualizuj_wymiary_guzikow({ 645,70 }, { 645, 120 }, {645, 170}, { 130, 30 }, sf::Color::Transparent, { 255,0,0 }, 2);
+    opcje.set_text("Zegary analogowe", "Zegary cyfrowe", "Menu", "Wczytaj plik...", { 650, 80 }, { 650, 130 }, { 635,20 }, {650, 180}, 10);
 
     //RYSOWANIE OBROTOMIERZA
     obrotomierz.aktualizuj_polozenie({ 400.0,300.0 });
@@ -331,19 +331,19 @@ void All_objects::obsluga_klikniecia(float& position_x, float& position_y, sf::C
 
     if (stop_klikniete == false && stop_button.obsluga_klikniecia(position_x, position_y, stop_klikniete)) {
         start_klikniete = false;
+
     }
     else if (start_klikniete == false && start_button.obsluga_klikniecia(position_x, position_y, start_klikniete)) {
         stop_klikniete = false;
         zegar_dla_danych.restart();
+
     }
-
     else if (opcje.GETgranice_zdjecia().contains({ position_x, position_y })) {           //sprawdzamy czy myszka zostala kliknieta na granicach zdjecia opcji
-
         opcje.wlaczanie_menu();
 
     }
     else {
-        opcje.obsluga_klikniecia(position_x, position_y, tryb_cyfrowy);
+        opcje.obsluga_klikniecia(position_x, position_y, tryb_cyfrowy, wczytywanie_pliku);
 
     }
 }
@@ -468,6 +468,10 @@ void All_objects::rysowanie_obiektow(sf::RenderWindow& window, Pojazd& AktualnyS
 
     if (stop_klikniete == false) {
         stop_button.rysuj(window);
+    }
+
+    if (wczytywanie_pliku == true) {
+        //window.clear();
     }
 
     window.display();

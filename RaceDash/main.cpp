@@ -17,23 +17,6 @@ int main() {
     sf::Clock zegar_dla_danych;                 //dla odswiezania danych
     sf::Clock zegar_dla_migania;                //dla migania obrotomierza
 
-
-    //OPERAJCE NA PLIKACH
-    fstream logi;
-    logi.open("logi.csv", ios::in);
-
-    if (logi.good() == false) {
-        cout << "Brak pliku!!!" << endl;
-        return 0;
-    }
-    string linia;
-    getline(logi, linia);                                                   //pomijamy pierwsza linijke pliku
-
-    bool MoznaCzytac = true;
-
-    //OBIEKT NA KTORYM DZIALAMY
-    Pojazd AktualnyStan;
-
     //ZALADOWANIE GRAFIK
     grafiki grafika;
     if (grafika.zaladuj_grafike() == false) {
@@ -41,8 +24,26 @@ int main() {
         return 0;
     }
 
-    //UTWORZENIE WSZYSTKICH OBIEKTOW
     All_objects obiekty(grafika);
+
+    //OPERAJCE NA PLIKACH
+    fstream logi;
+
+        logi.open("logi.csv", ios::in);
+
+    if (logi.good() == false) {
+        cout << "Brak pliku!!!" << endl;
+        return 0;
+    }
+    string linia;
+    getline(logi, linia);                                                   //pomijamy pierwsza linijke pliku                                             //pomijamy pierwsza linijke pliku
+
+    bool MoznaCzytac = true;
+
+    //OBIEKT NA KTORYM DZIALAMY
+    Pojazd AktualnyStan;
+
+    //UTWORZENIE WSZYSTKICH OBIEKTOW
     obiekty.utworzenie_obiektow();
 
 
@@ -72,12 +73,45 @@ while (window.isOpen()) {
             }
         }
     }
+
+
+    if (obiekty.wczytywanie_pliku == true) {
+        string wczytany_plik = wybierz_plik();
+        if (wczytany_plik != "logi.csv") {
+            logi.close();
+            logi.clear();
+
+            logi.open(wczytany_plik, ios::in);
+            getline(logi, linia);
+
+            MoznaCzytac = true;
+        }
+        obiekty.wczytywanie_pliku = false;
+        zegar_dla_danych.restart();
+    }
+
+    //JESLI UZYTKOWNIK WYBIERZE ZALADOWANIE SWOJEGO PLIKU
+    if (obiekty.wczytywanie_pliku == true) {
+        string wczytany_plik = wybierz_plik();
+        if (wczytany_plik != "") {
+            logi.close();
+            logi.clear();
+
+            logi.open(wczytany_plik, ios::in);
+            getline(logi, linia);
+
+            MoznaCzytac = true;
+        }
+        zegar_dla_danych.restart();
+    }
+
     // PETLA AKTUALIZUJACA DANE AZ DO KONCA DANYCH W PLIKU
     if (obiekty.start_klikniete == true) {
         if ((MoznaCzytac == true) && (zegar_dla_danych.getElapsedTime().asMilliseconds() >= 100)) {
             if (odczyt(logi, AktualnyStan) == false) {              // jesli skoncza sie dane do czytania koniec programu
                 cout << "Koniec danych" << endl;
                 MoznaCzytac = false;
+
             }
 
             //WYWOLANIE WARUNKOW OD ZMIANY KOLOROW ITD

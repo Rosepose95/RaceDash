@@ -13,8 +13,10 @@ using namespace std;
 class All_objects{
 public:
     bool tryb_cyfrowy = false;
-
+    bool wczytywanie_pliku = false;
     Menu opcje;
+
+
     Ladowanie_grafik obrotomierz;
     Ladowanie_grafik wskazowka_obrotomierz;
 
