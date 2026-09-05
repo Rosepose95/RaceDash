@@ -13,7 +13,7 @@ using namespace std;
 class All_objects{
 public:
     bool tryb_cyfrowy = false;
-    bool wczytywanie_pliku = false;
+    bool czy_menu_wysuniete = false;
     Menu opcje;
 
 
@@ -68,6 +68,11 @@ public:
     Prosty_prostokat stan_paliwa;
     bool rezerwa = false;
 
+    bool main_menu_otwarte = true;
+    bool start_na_testowym = false;
+    bool wczytaj_plik = false;
+    bool exit = false;
+    Menu main_menu;
     //------------------------------------------------------------------------DLA TRYBU CYFROWEGO
 
     Ladowanie_grafik obrotomierz_cyfrowy;
@@ -106,7 +111,7 @@ public:
         wysokie_cisnienieoleju_zdj(grafika.wcisnienieolej_png), paliwo_zdj(grafika.paliwo_png), rezerwa_zdj(grafika.rezerwa_png), obrotomierz_cyfrowy(grafika.obrotomierz_cyfrowy_png),
         l_obroty_cyfrowy(grafika.czcionka), bieg_cyfrowy(grafika.czcionka), predkosc_cyfrowy(grafika.czcionka), lap_timer(grafika.czcionka), temp_oleju_cyfrowy(grafika.czcionka),
         start_button(grafika.czcionka), stop_button(grafika.czcionka), napis_biegu(grafika.czcionka), napis_predkosci(grafika.czcionka), napis_lap_timer(grafika.czcionka),
-        napis_olej_cyfrowy(grafika.czcionka) {}
+        napis_olej_cyfrowy(grafika.czcionka), main_menu(grafika.main_menu_jpg, grafika.czcionka) {}
 
     void utworzenie_obiektow();
     void warunki(Pojazd& AktualnyStan, sf::Clock& zegar_dla_migania);

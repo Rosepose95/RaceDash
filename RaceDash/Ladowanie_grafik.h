@@ -18,6 +18,7 @@ public:
     sf::Texture paliwo_png;
     sf::Texture rezerwa_png;
     sf::Texture menu_png;
+    sf::Texture main_menu_jpg;
 
 public:
 

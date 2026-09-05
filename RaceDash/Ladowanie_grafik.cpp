@@ -51,6 +51,9 @@ bool grafiki::zaladuj_grafike() {
     if (menu_png.loadFromFile("grafika/menu.png") == false) {
         return 0;
     }
+    if (main_menu_jpg.loadFromFile("grafika/main_menu.jpg") == false) {
+        return 0;
+    }
 
     return true;
 }

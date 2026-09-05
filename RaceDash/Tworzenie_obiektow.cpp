@@ -7,11 +7,10 @@ using namespace std;
 //TWORZENIE WSZYSTKICH OBIEKTOW
 void All_objects::utworzenie_obiektow() {
 
-    tryb_cyfrowy = false;
     opcje.wymiary_zdj({ 730,30 }, 0.07);
     opcje.aktualizuj_wymiary_ramki({ 630,10 }, { 160,200 }, { 0,0,0,125 }, { 255,0,0 }, 5);
     opcje.aktualizuj_wymiary_guzikow({ 645,70 }, { 645, 120 }, {645, 170}, { 130, 30 }, sf::Color::Transparent, { 255,0,0 }, 2);
-    opcje.set_text("Zegary analogowe", "Zegary cyfrowe", "Menu", "Wczytaj plik...", { 650, 80 }, { 650, 130 }, { 635,20 }, {650, 180}, 10);
+    opcje.set_text("Zegary analogowe", "Zegary cyfrowe", "Menu", "Powrot do menu", { 650, 80 }, { 650, 130 }, { 635,20 }, {650, 180}, 10, 15);
 
     //RYSOWANIE OBROTOMIERZA
     obrotomierz.aktualizuj_polozenie({ 400.0,300.0 });
@@ -123,6 +122,12 @@ void All_objects::utworzenie_obiektow() {
 
     //ZAPALANIE DIODY OD REZERWY
     rezerwa = false;
+
+    //GLOWNE MENU
+    main_menu.wymiary_zdj({ 0,0 }, 1);
+    main_menu.aktualizuj_wymiary_ramki({ 0,0 }, { 800,600 }, sf::Color::Transparent, { 255,0,255 }, -10);
+    main_menu.aktualizuj_wymiary_guzikow({ 330,300 }, { 330, 390 }, { 330, 510 }, { 175, 50 }, {30,30,30,200}, {255,0,0}, 7);
+    main_menu.set_text("       Start na \n testowym pliku ", "Wczytaj plik...", "RaceDash", "Exit", { 330, 305 }, { 340, 405 }, { 170,130 }, { 390, 525}, 17, 85);
 
     //------------------------------------------------------------------------DLA TRYBU CYFROWEGO
     //OBROTOMIERZ
@@ -321,15 +326,19 @@ void All_objects::warunki(Pojazd& AktualnyStan, sf::Clock& zegar_dla_migania) {
 
 void All_objects::hover(sf::Vector2i& poz_myszki) {
 
-    opcje.obsluga_najechania(poz_myszki.x, poz_myszki.y);
+    opcje.obsluga_najechania(poz_myszki.x, poz_myszki.y, czy_menu_wysuniete);
     start_button.obsluga_najechania(poz_myszki.x, poz_myszki.y);
     stop_button.obsluga_najechania(poz_myszki.x, poz_myszki.y);
+    main_menu.obsluga_najechania(poz_myszki.x, poz_myszki.y, main_menu_otwarte);
 }
 //-----------------------------------------------------------------------------------------------------------------------------------------OBSLUGA KLIKNIECIA GUZIKOW
 
 void All_objects::obsluga_klikniecia(float& position_x, float& position_y, sf::Clock& zegar_dla_danych) {
 
-    if (stop_klikniete == false && stop_button.obsluga_klikniecia(position_x, position_y, stop_klikniete)) {
+    if (main_menu_otwarte == true && main_menu.obsluga_klikniecia(position_x, position_y, start_na_testowym, wczytaj_plik, exit, main_menu_otwarte)) {
+        
+    }
+    else if (stop_klikniete == false && stop_button.obsluga_klikniecia(position_x, position_y, stop_klikniete)) {
         start_klikniete = false;
 
     }
@@ -339,11 +348,11 @@ void All_objects::obsluga_klikniecia(float& position_x, float& position_y, sf::C
 
     }
     else if (opcje.GETgranice_zdjecia().contains({ position_x, position_y })) {           //sprawdzamy czy myszka zostala kliknieta na granicach zdjecia opcji
-        opcje.wlaczanie_menu();
+        opcje.wlaczanie_menu(czy_menu_wysuniete);
 
     }
     else {
-        opcje.obsluga_klikniecia(position_x, position_y, tryb_cyfrowy, wczytywanie_pliku);
+        opcje.obsluga_klikniecia(position_x, position_y, tryb_cyfrowy, tryb_cyfrowy, main_menu_otwarte, czy_menu_wysuniete);
 
     }
 }
@@ -353,126 +362,132 @@ void All_objects::obsluga_klikniecia(float& position_x, float& position_y, sf::C
 void All_objects::rysowanie_obiektow(sf::RenderWindow& window, Pojazd& AktualnyStan, sf::Clock& zegar_dla_migania) {
     window.clear(sf::Color(30, 30, 30));
 
-    //WYSWIETLANIE DLA TRYBU ANALAGOWEOG
-    if (tryb_cyfrowy == false) {
-        //WYSWIETLANIE BIEGU
-        bieg.rysuj(window, AktualnyStan.getGear(), 0, "0");
-
-        //OBROTY DLA ANALOGOWEGO
-        obrotomierz.rysuj(window);
-        obroty.rysuj(window, AktualnyStan.getObroty(), 0, "0");
-        wskazowka_obrotomierz.rysuj(window);
-        obramowka_rpm.rysuj(window);
-        obroty.rysuj(window, AktualnyStan.getObroty(), 0, "0");
-
-        //PREDKOSCIOMIERZ
-        predkosciomierz.rysuj(window);
-        predkosc.rysuj(window, AktualnyStan.getPredkosc(), 0, "0");
-        wskazowka_predkosciomierz.rysuj(window);
-
-        //TEMP OLEJU
-        temperatura_oleju.rysuj(window);
-        wskazowka_tempoleju.rysuj(window);
-        obramowka_tempoleju.rysuj(window);
-    }
-    //WYSWIETLANIE DLA TRYBU CYFROWEGO
-    else {
-        //WYSWIETLANIE BIEGU
-        bieg_cyfrowy.rysuj(window, AktualnyStan.getGear(), 0, "0");
-        ramka_biegu.rysuj(window);
-        napis_biegu.rysuj(window);
-
-        //OBROTY DLA CYFROWEGO
-        obroty_cyfrowy.rysuj(window);
-        obrotomierz_cyfrowy.rysuj(window);
-
-        //LICZBA OBROTOW
-        l_obroty_cyfrowy.rysuj(window, AktualnyStan.getObroty(), 0, " RPM");
-
-        //PREDKOSC
-        predkosc_cyfrowy.rysuj(window, AktualnyStan.getPredkosc(), 0, "0");
-        ramka_predkosci.rysuj(window);
-        napis_predkosci.rysuj(window);
-
-        //TEMP OLEJU
-        temp_oleju_cyfrowy.rysuj(window, AktualnyStan.getTempoleju(), 0, " C");
-        napis_olej_cyfrowy.rysuj(window);
-
-        //LAP TIMER
-        lap_timer.rysuj(window, AktualnyStan.getCzas() / 1000.0f, 1, " s");
-        napis_lap_timer.rysuj(window);
-        ramka_lap_timer.rysuj(window);
-    }
-
-    //CZESC WSPOLNA DLA OBU TRYBOW WYSWIETLANIA
-    ramka.rysuj(window);
-
-    //DIODY OBROTOW
-    for (int i = 0; i < 5; i++) {
-        diody[i].rysuj(window);
-    }
-
-    //MENU/OPCJE
-    opcje.rysuj_zdj(window);
-    opcje.rysuj_menu(window);
-
-    //TEMP WODY
-    woda.rysuj(window, AktualnyStan.getTempChlodnicy(), 1, "C");
-    woda.alarm_gorny(AktualnyStan.getTempChlodnicy(), 110.0, 120.0, zegar_dla_migania, woda_overheat_zdj, woda_zdj, window);
-
-    //BATERIA
-    bateria.rysuj(window, AktualnyStan.getBateria(), 1, "V");
-    if (AktualnyStan.getBateria() < 12.0) {
-        bateria_dead_zdj.rysuj(window);
-        bateria.zmiana_koloru_obramowki({ 255, 0, 0 });
+    if (main_menu_otwarte == true ) {
+        main_menu.rysuj_zdj(window);
+        main_menu.rysuj_menu(window);
     }
     else {
-        bateria_zdj.rysuj(window);
-        bateria.zmiana_koloru_obramowki({ 0, 255, 0 });
-    }
+        //WYSWIETLANIE DLA TRYBU ANALAGOWEOG
+        if (tryb_cyfrowy == false) {
+            //WYSWIETLANIE BIEGU
+            bieg.rysuj(window, AktualnyStan.getGear(), 0, "0");
 
-    //CISNIENIE OLEJU
-    cisnienie_oleju.rysuj(window, AktualnyStan.getCisnienie(), 1, " Bar");
-    if (AktualnyStan.getCisnienie() >= 2.5 && AktualnyStan.getCisnienie() < 6.7) {
-        cisnienieoleju_zdj.rysuj(window);
-        cisnienie_oleju.zmiana_koloru_obramowki({ 0,255,0 });
-    }
-    else if (AktualnyStan.getCisnienie() >= 1.0 && AktualnyStan.getCisnienie() < 2.5) {
-        wysokie_cisnienieoleju_zdj.rysuj(window);
-        cisnienie_oleju.zmiana_koloru_obramowki({ 255,165,0 });
-    }
-    else {
-        if ((AktualnyStan.getCisnienie() < 1.0 && zegar_dla_migania.getElapsedTime().asMilliseconds() % 500 > 250) || (AktualnyStan.getCisnienie() >= 6.7 && zegar_dla_migania.getElapsedTime().asMilliseconds() % 500 > 250)) {
-            wysokie_cisnienieoleju_zdj.rysuj(window);
-            cisnienie_oleju.zmiana_koloru_obramowki({ 255,0,0 });
+            //OBROTY DLA ANALOGOWEGO
+            obrotomierz.rysuj(window);
+            obroty.rysuj(window, AktualnyStan.getObroty(), 0, "0");
+            wskazowka_obrotomierz.rysuj(window);
+            obramowka_rpm.rysuj(window);
+            obroty.rysuj(window, AktualnyStan.getObroty(), 0, "0");
+
+            //PREDKOSCIOMIERZ
+            predkosciomierz.rysuj(window);
+            predkosc.rysuj(window, AktualnyStan.getPredkosc(), 0, "0");
+            wskazowka_predkosciomierz.rysuj(window);
+
+            //TEMP OLEJU
+            temperatura_oleju.rysuj(window);
+            wskazowka_tempoleju.rysuj(window);
+            obramowka_tempoleju.rysuj(window);
+        }
+        //WYSWIETLANIE DLA TRYBU CYFROWEGO
+        else {
+            //WYSWIETLANIE BIEGU
+            bieg_cyfrowy.rysuj(window, AktualnyStan.getGear(), 0, "0");
+            ramka_biegu.rysuj(window);
+            napis_biegu.rysuj(window);
+
+            //OBROTY DLA CYFROWEGO
+            obroty_cyfrowy.rysuj(window);
+            obrotomierz_cyfrowy.rysuj(window);
+
+            //LICZBA OBROTOW
+            l_obroty_cyfrowy.rysuj(window, AktualnyStan.getObroty(), 0, " RPM");
+
+            //PREDKOSC
+            predkosc_cyfrowy.rysuj(window, AktualnyStan.getPredkosc(), 0, "0");
+            ramka_predkosci.rysuj(window);
+            napis_predkosci.rysuj(window);
+
+            //TEMP OLEJU
+            temp_oleju_cyfrowy.rysuj(window, AktualnyStan.getTempoleju(), 0, " C");
+            napis_olej_cyfrowy.rysuj(window);
+
+            //LAP TIMER
+            lap_timer.rysuj(window, AktualnyStan.getCzas() / 1000.0f, 1, " s");
+            napis_lap_timer.rysuj(window);
+            ramka_lap_timer.rysuj(window);
+        }
+
+        //CZESC WSPOLNA DLA OBU TRYBOW WYSWIETLANIA
+        ramka.rysuj(window);
+
+        //DIODY OBROTOW
+        for (int i = 0; i < 5; i++) {
+            diody[i].rysuj(window);
+        }
+
+        //MENU/OPCJE
+        if (czy_menu_wysuniete == false) {
+            opcje.rysuj_zdj(window);
+
         }
         else {
+            opcje.rysuj_menu(window);
+
+        }
+        //TEMP WODY
+        woda.rysuj(window, AktualnyStan.getTempChlodnicy(), 1, "C");
+        woda.alarm_gorny(AktualnyStan.getTempChlodnicy(), 110.0, 120.0, zegar_dla_migania, woda_overheat_zdj, woda_zdj, window);
+
+        //BATERIA
+        bateria.rysuj(window, AktualnyStan.getBateria(), 1, "V");
+        if (AktualnyStan.getBateria() < 12.0) {
+            bateria_dead_zdj.rysuj(window);
+            bateria.zmiana_koloru_obramowki({ 255, 0, 0 });
+        }
+        else {
+            bateria_zdj.rysuj(window);
+            bateria.zmiana_koloru_obramowki({ 0, 255, 0 });
+        }
+
+        //CISNIENIE OLEJU
+        cisnienie_oleju.rysuj(window, AktualnyStan.getCisnienie(), 1, " Bar");
+        if (AktualnyStan.getCisnienie() >= 2.5 && AktualnyStan.getCisnienie() < 6.7) {
             cisnienieoleju_zdj.rysuj(window);
-            cisnienie_oleju.zmiana_koloru_obramowki({ sf::Color::Transparent });
+            cisnienie_oleju.zmiana_koloru_obramowki({ 0,255,0 });
+        }
+        else if (AktualnyStan.getCisnienie() >= 1.0 && AktualnyStan.getCisnienie() < 2.5) {
+            wysokie_cisnienieoleju_zdj.rysuj(window);
+            cisnienie_oleju.zmiana_koloru_obramowki({ 255,165,0 });
+        }
+        else {
+            if ((AktualnyStan.getCisnienie() < 1.0 && zegar_dla_migania.getElapsedTime().asMilliseconds() % 500 > 250) || (AktualnyStan.getCisnienie() >= 6.7 && zegar_dla_migania.getElapsedTime().asMilliseconds() % 500 > 250)) {
+                wysokie_cisnienieoleju_zdj.rysuj(window);
+                cisnienie_oleju.zmiana_koloru_obramowki({ 255,0,0 });
+            }
+            else {
+                cisnienieoleju_zdj.rysuj(window);
+                cisnienie_oleju.zmiana_koloru_obramowki({ sf::Color::Transparent });
+            }
+        }
+
+        //PALIWO, REZERWA
+        paliwo_zdj.rysuj(window);
+        obramowka_paliwo.rysuj(window);
+        stan_paliwa.rysuj(window);
+        dioda_rezerwy.rysuj(window);
+
+        if (rezerwa == true) {
+            rezerwa_zdj.rysuj(window);
+        }
+
+        if (start_klikniete == false) {
+            start_button.rysuj(window);
+        }
+
+        if (stop_klikniete == false) {
+            stop_button.rysuj(window);
         }
     }
-
-    //PALIWO, REZERWA
-    paliwo_zdj.rysuj(window);
-    obramowka_paliwo.rysuj(window);
-    stan_paliwa.rysuj(window);
-    dioda_rezerwy.rysuj(window);
-
-    if (rezerwa == true) {
-        rezerwa_zdj.rysuj(window);
-    }
-
-    if (start_klikniete == false) {
-        start_button.rysuj(window);
-    }
-
-    if (stop_klikniete == false) {
-        stop_button.rysuj(window);
-    }
-
-    if (wczytywanie_pliku == true) {
-        //window.clear();
-    }
-
     window.display();
 }

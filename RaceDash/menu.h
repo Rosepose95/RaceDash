@@ -29,7 +29,7 @@ class Menu {
 	Button Wczytaj;
 
 
-	bool czy_menu_wysuniete = false;
+	//bool czy_menu_wysuniete = false;
 
 public:
 	Menu() = default;
@@ -37,11 +37,11 @@ public:
 
 	void aktualizuj_wymiary_ramki(sf::Vector2f Position, sf::Vector2f Size, sf::Color Fillcolor, sf::Color Outlinecolor, int thickness);
 	void aktualizuj_wymiary_guzikow(sf::Vector2f Position1, sf::Vector2f Position2, sf::Vector2f Position3, sf::Vector2f Size, sf::Color Fillcolor, sf::Color Outlinecolor, int thickness);
-	void set_text(string napis1, string napis2, string napis3, string napis4, sf::Vector2f Pozycja1, sf::Vector2f Pozycja2, sf::Vector2f Pozycja3, sf::Vector2f Pozycja4, int charactersize);
+	void set_text(string napis1, string napis2, string napis3, string napis4, sf::Vector2f Pozycja1, sf::Vector2f Pozycja2, sf::Vector2f Pozycja3, sf::Vector2f Pozycja4, int charactersize1 ,int chacharactersize2);
 	void wymiary_zdj(sf::Vector2f Positon, float skala);
-	void obsluga_najechania(float mysz_x, float mysz_y);
-	bool obsluga_klikniecia(float mysz_x, float mysz_y, bool& tryb, bool& tryb2);
-	void wlaczanie_menu();
+	void obsluga_najechania(float mysz_x, float mysz_y, bool& tryb);
+	bool obsluga_klikniecia(float mysz_x, float mysz_y, bool& tryb1, bool& tryb2, bool&tryb3, bool& tryb4);
+	void wlaczanie_menu(bool& tryb);
 
 	sf::FloatRect GETgranice_zdjecia() { return zdj.getGlobalBounds(); }
 

@@ -28,15 +28,16 @@ int main() {
 
     //OPERAJCE NA PLIKACH
     fstream logi;
+    string linia;
 
         logi.open("logi.csv", ios::in);
 
-    if (logi.good() == false) {
-        cout << "Brak pliku!!!" << endl;
-        return 0;
-    }
-    string linia;
-    getline(logi, linia);                                                   //pomijamy pierwsza linijke pliku                                             //pomijamy pierwsza linijke pliku
+        if (logi.good() == false) {
+            cout << "Brak pliku!!!" << endl;
+            return 0;
+        }
+        getline(logi, linia);                                         //pomijamy pierwsza linijke pliku
+
 
     bool MoznaCzytac = true;
 
@@ -73,38 +74,27 @@ while (window.isOpen()) {
             }
         }
     }
-
-
-    if (obiekty.wczytywanie_pliku == true) {
-        string wczytany_plik = wybierz_plik();
-        if (wczytany_plik != "logi.csv") {
-            logi.close();
-            logi.clear();
-
-            logi.open(wczytany_plik, ios::in);
-            getline(logi, linia);
-
-            MoznaCzytac = true;
-        }
-        obiekty.wczytywanie_pliku = false;
-        zegar_dla_danych.restart();
+    //ZAMYKANIE PROGRAMU JESLI EXIT KLIKNIETE
+    if (obiekty.exit == true) {
+        window.close();
     }
+    if (obiekty.start_na_testowym == false) {
+        //JESLI UZYTKOWNIK WYBIERZE ZALADOWANIE SWOJEGO PLIKU
+        if (obiekty.wczytaj_plik == true) {
+            string wczytany_plik = wybierz_plik();
+            if (wczytany_plik != "") {
+                logi.close();
+                logi.clear();
 
-    //JESLI UZYTKOWNIK WYBIERZE ZALADOWANIE SWOJEGO PLIKU
-    if (obiekty.wczytywanie_pliku == true) {
-        string wczytany_plik = wybierz_plik();
-        if (wczytany_plik != "") {
-            logi.close();
-            logi.clear();
+                logi.open(wczytany_plik, ios::in);
+                getline(logi, linia);
 
-            logi.open(wczytany_plik, ios::in);
-            getline(logi, linia);
-
-            MoznaCzytac = true;
+                MoznaCzytac = true;
+            }
+            obiekty.wczytaj_plik = false;
+            zegar_dla_danych.restart();
         }
-        zegar_dla_danych.restart();
     }
-
     // PETLA AKTUALIZUJACA DANE AZ DO KONCA DANYCH W PLIKU
     if (obiekty.start_klikniete == true) {
         if ((MoznaCzytac == true) && (zegar_dla_danych.getElapsedTime().asMilliseconds() >= 100)) {
