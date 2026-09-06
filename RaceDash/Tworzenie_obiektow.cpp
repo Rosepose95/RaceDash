@@ -5,7 +5,7 @@
 using namespace std;
 
 //TWORZENIE WSZYSTKICH OBIEKTOW
-void All_objects::utworzenie_obiektow() {
+void Wspolne_obiekty::utworzenie_obiektow() {
 
     opcje.wymiary_zdj({ 730,30 }, 0.07);
     opcje.aktualizuj_wymiary_ramki({ 630,10 }, { 160,200 }, { 0,0,0,125 }, { 255,0,0 }, 5);
@@ -175,7 +175,7 @@ void All_objects::utworzenie_obiektow() {
 
 //-----------------------------------------------------------------------------------------------------------------------------------------WARUNKI ZMIANY KOLOROW ITD
 
-void All_objects::warunki(Pojazd& AktualnyStan, sf::Clock& zegar_dla_migania) {
+void Wspolne_obiekty::warunki(Pojazd& AktualnyStan, sf::Clock& zegar_dla_migania) {
 
     //UAKTUALNIENIE DANYCH DLA WSKAZOWKI
     wskazowka_obrotomierz.wyliczanie_kata(AktualnyStan.getObroty());
@@ -324,7 +324,7 @@ void All_objects::warunki(Pojazd& AktualnyStan, sf::Clock& zegar_dla_migania) {
 
 //-----------------------------------------------------------------------------------------------------------------------------------------HOVER DLA GUZIKOW
 
-void All_objects::hover(sf::Vector2i& poz_myszki) {
+void Wspolne_obiekty::hover(sf::Vector2i& poz_myszki) {
 
     opcje.obsluga_najechania(poz_myszki.x, poz_myszki.y, czy_menu_wysuniete);
     start_button.obsluga_najechania(poz_myszki.x, poz_myszki.y);
@@ -333,7 +333,7 @@ void All_objects::hover(sf::Vector2i& poz_myszki) {
 }
 //-----------------------------------------------------------------------------------------------------------------------------------------OBSLUGA KLIKNIECIA GUZIKOW
 
-void All_objects::obsluga_klikniecia(float& position_x, float& position_y, sf::Clock& zegar_dla_danych) {
+void Wspolne_obiekty::obsluga_klikniecia(float& position_x, float& position_y, sf::Clock& zegar_dla_danych) {
 
     if (main_menu_otwarte == true && main_menu.obsluga_klikniecia(position_x, position_y, start_na_testowym, wczytaj_plik, exit, main_menu_otwarte)) {
         
@@ -359,7 +359,7 @@ void All_objects::obsluga_klikniecia(float& position_x, float& position_y, sf::C
 
 //-----------------------------------------------------------------------------------------------------------------------------------------RYSOWANIE OBIEKTOW
 
-void All_objects::rysowanie_obiektow(sf::RenderWindow& window, Pojazd& AktualnyStan, sf::Clock& zegar_dla_migania) {
+void Wspolne_obiekty::rysowanie_obiektow(sf::RenderWindow& window, Pojazd& AktualnyStan, sf::Clock& zegar_dla_migania) {
     window.clear(sf::Color(30, 30, 30));
 
     if (main_menu_otwarte == true ) {

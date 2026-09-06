@@ -53,12 +53,18 @@ bool Menu::obsluga_klikniecia(float mysz_x, float mysz_y, bool& tryb1, bool& try
 		return false;
 
 	}
+	bool k1 = Opcja1.obsluga_klikniecia(mysz_x, mysz_y, tryb1);
+	bool k2 = Opcja2.obsluga_klikniecia(mysz_x, mysz_y, tryb2);
+	bool k3 = Wczytaj.obsluga_klikniecia(mysz_x, mysz_y, tryb3);
 
-	Opcja1.obsluga_klikniecia(mysz_x, mysz_y, tryb1);
-	Opcja2.obsluga_klikniecia(mysz_x, mysz_y, tryb2);
-	Wczytaj.obsluga_klikniecia(mysz_x, mysz_y, tryb3);
-
-	tryb4 = false;
+	//ZABEPIECZENIE ABY KLIKNIECIE GDZIEKOLWIEK W MENU I MAIN_MENU NIE POWODOWALO ZAMKNIECIE ICH
+	if (k1 == true || k2 == true || k3 == true) {
+		tryb4 = false;
+		return true;
+	}
+	else {
+		return false;
+	}
 }
 
 
