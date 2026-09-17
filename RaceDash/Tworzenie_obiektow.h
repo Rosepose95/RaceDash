@@ -20,6 +20,17 @@ public:
     virtual void obsluga_klikniecia(float& position_x, float& position_y, sf::Clock & zegar_dla_danych) = 0;
     virtual void rysowanie_obiektow(sf::RenderWindow & window, Pojazd & AktualnyStan, sf::Clock & zegar_dla_migania) = 0;
 
+
+    sf::Color alarm_gorny(float wartosc, float max_prog, float min_prog, sf::Clock& zegar_dla_migania);
+    sf::Color alarm_dolny(float wartosc, float max_prog, float min_prog, sf::Clock& zegar_dla_migania);
+    sf::Color alarm_podwojny(float wartosc, float max_prog, float max_avg, float min_prog, float min_avg, sf::Clock& zegar_dla_migania);
+    sf::Color alarm_temp_oleju(float wartosc, float max_prog, float avg_prog, float min_prog, sf::Clock& zegar_dla_migania);
+    sf::Color plynny_alarm(float wartosc, float max_prog, float min_prog, sf::Color kolor_startowy, sf::Color kolor_koncowy, float miganie, sf::Clock& zegar_dla_migania);
+    sf::Color plynna_zmiana_obramowania(float wartosc, float max_prog, float min_prog, sf::Color kolor_startowy, sf::Color kolor_koncowy);
+    void zmiana_rysunku_gorna(float wartosc, float prog, sf::Clock& zegar_dla_migania, Ladowanie_grafik& grafika1, Ladowanie_grafik& grafika2, sf::RenderWindow &window);
+    void zmiana_rysunku_dolna(float wartosc, float prog, sf::Clock& zegar_dla_migania, Ladowanie_grafik& grafika1, Ladowanie_grafik& grafika2, sf::RenderWindow& window);
+    void zmiana_rysunku_podwojna(float wartosc, float max_prog, float min_prog, sf::Clock& zegar_dla_migania, Ladowanie_grafik& grafika1, Ladowanie_grafik& grafika2, sf::RenderWindow& window);
+
 };
 
 class Obiekty_wspolne : public Rodzic {
