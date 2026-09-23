@@ -156,9 +156,14 @@ public:
     Obiekty_analogowy analogowy;
     Obiekty_cyfrowy cyfrowy;
 
+    float odswiezanie_pliku = 100;
+    float wyswietlanie_odswiezanie_pliku = odswiezanie_pliku;
+
+    Tekst button_inf;
+
    Obiekty_logiczne(grafiki& grafika) :
         opcje(grafika.menu_png, grafika.czcionka), start_button(grafika.czcionka), stop_button(grafika.czcionka),
-        main_menu(grafika.main_menu_jpg, grafika.czcionka), wspolne(grafika), analogowy(grafika), cyfrowy(grafika) {}
+        main_menu(grafika.main_menu_jpg, grafika.czcionka), wspolne(grafika), analogowy(grafika), cyfrowy(grafika), button_inf(grafika.czcionka) {}
 
     void utworzenie_obiektow();
     void warunki(Pojazd& AktualnyStan, sf::Clock& zegar_dla_migania);

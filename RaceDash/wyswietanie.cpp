@@ -41,8 +41,8 @@ void Wyswietlanie::aktualizuj_string(float wartosc, int precyzja, string znak) {
 		stringstream stream;           
 
 		stream.precision(precyzja);     
-		stream.setf(ios::fixed);   // ustawienie precyzji po przecinku 
-		stream<<wartosc;            
+		stream<<fixed<<wartosc;            // ustawienie precyzji po przecinku i  wrzucanie napisu
+
 
 		tekst.setString(stream.str() + znak);
 	}
@@ -193,6 +193,13 @@ void Tekst::aktualizuj_napis(string text, sf::Vector2f SetPostion, int Character
 	napis.setPosition(SetPostion);
 	napis.setCharacterSize(Charactersize);
 	napis.setFillColor(Fillcolor);
+}
+void Tekst::dodaj_wartosc_zmienna(float wartosc){
+	stringstream liczba;
+	liczba.precision(2);
+	liczba << fixed << wartosc/100;
+
+	napis.setString("Strzalka prawa - PRZYSPIESZENIE odczytywania\nStrzalka lewa - ZWOLNIENIE odczytywania\nAktualnie: " + liczba.str());
 }
 void Tekst::rysuj(sf::RenderWindow& window) {
 	window.draw(napis);

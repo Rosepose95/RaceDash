@@ -37,7 +37,7 @@ string wybierz_plik() {
 bool odczyt(fstream& logi, Pojazd& AktualnyStan) {
 
 	string linia;
-	float przepisanie[9];
+	float przepisanie[9] = { 0.0 };
 
 		if (getline(logi, linia)) {
 

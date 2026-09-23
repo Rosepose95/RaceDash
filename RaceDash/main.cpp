@@ -49,11 +49,33 @@ int main() {
         // NAJECHANIE NA GUZIKI
         obiekty->hover(poz_myszki);
 
+        //OBLSUGA KLIKNIECIA STRZALEK = przyspieszenie/zwolnienie odczytywania z pliku
         while (const auto event = window.pollEvent()) {
             if (event->is<sf::Event::Closed>()) { // sprawdzanie czy kliknieto X w oknie
                 window.close();
             }
+            if (const auto* buttonevent = event->getIf<sf::Event::KeyPressed>()) {
 
+                if (buttonevent->code == sf::Keyboard::Key::Left) {
+                    obiekty->odswiezanie_pliku += 15;
+                    obiekty->wyswietlanie_odswiezanie_pliku -= 15;
+
+                    if (obiekty->odswiezanie_pliku >= 190) {
+                        obiekty->odswiezanie_pliku = 190;
+                        obiekty->wyswietlanie_odswiezanie_pliku = 10;
+                    }
+                }
+                else if (buttonevent->code == sf::Keyboard::Key::Right) {
+                    obiekty->odswiezanie_pliku -= 15;
+                    obiekty->wyswietlanie_odswiezanie_pliku += 15;
+
+                    if (obiekty->odswiezanie_pliku <= 10) {
+                        obiekty->odswiezanie_pliku = 10;
+                        obiekty->wyswietlanie_odswiezanie_pliku = 190;
+
+                    }
+                }
+            }
             //OBSLUGA KLIKNIECIA W GUZIKI
             if (const auto* mousevent = event->getIf<sf::Event::MouseButtonPressed>()) {
                 if (mousevent->button == sf::Mouse::Button::Left) {
@@ -76,6 +98,8 @@ int main() {
                         }
                         getline(logi, linia);
 
+                        obiekty->odswiezanie_pliku = 100;
+                        obiekty->wyswietlanie_odswiezanie_pliku = obiekty->odswiezanie_pliku;
                         MoznaCzytac = true;
                         obiekty->start_na_testowym = false;
                         zegar_dla_danych.restart();
@@ -95,6 +119,8 @@ int main() {
                             obiekty->main_menu_otwarte = false;
                             obiekty->wczytaj_plik = false;
                         }
+                        obiekty->odswiezanie_pliku = 100;
+                        obiekty->wyswietlanie_odswiezanie_pliku = obiekty->odswiezanie_pliku;
                         zegar_dla_danych.restart();
                     }
                     //ZAMYKANIE PROGRAMU JESLI EXIT KLIKNIETE
@@ -111,7 +137,7 @@ int main() {
         
          // PETLA AKTUALIZUJACA DANE AZ DO KONCA DANYCH W PLIKU
         if (obiekty->start_klikniete == true) {
-            if ((MoznaCzytac == true) && (zegar_dla_danych.getElapsedTime().asMilliseconds() >= 100)) {
+            if ((MoznaCzytac == true) && (zegar_dla_danych.getElapsedTime().asMilliseconds() >= obiekty->odswiezanie_pliku)) {
                 if (odczyt(logi, AktualnyStan) == false) {              // jesli skoncza sie dane do czytania koniec programu
                     cout << "Koniec danych" << endl;
                     MoznaCzytac = false;

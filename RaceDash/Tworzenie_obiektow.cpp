@@ -194,6 +194,7 @@ void Obiekty_wspolne::utworzenie_obiektow(){
     obramowka_paliwo.aktualizuj_prostokat({ 100,30 }, sf::Color::Transparent, { 0,0,0 }, 5, { 600, 535 });
     stan_paliwa.aktualizuj_prostokat({ 100,30 }, { 0,255,0 }, sf::Color::Transparent, 0, { 600, 535 });
     rezerwa = false;
+
 }
 
 //DLA WSPOLNYCH OBIEKTOW WARUNKI
@@ -219,6 +220,7 @@ void Obiekty_wspolne::warunki(Pojazd& AktualnyStan, sf::Clock& zegar_dla_migania
     bateria.zmiana_koloru_obramowki(alarm_dolny(AktualnyStan.getBateria(), 12.0, 12.5, zegar_dla_migania));
 
     cisnienie_oleju.zmiana_koloru_obramowki(alarm_podwojny(AktualnyStan.getCisnienie(), 6.7, 6.0, 1.0, 2.5, zegar_dla_migania ));
+
 }
 
 //DLA WSPOLNYCH OBIEKTOW RYSOWANIE
@@ -282,6 +284,8 @@ void Obiekty_cyfrowy::warunki(Pojazd& AktualnyStan, sf::Clock& zegar_dla_migania
     obroty_cyfrowy.poziom_paliwa(8000.0, 0.0, AktualnyStan.getObroty(), 570, 60);
 
     ramka_predkosci.zmiana_obramowki(plynna_zmiana_obramowania(AktualnyStan.getPredkosc(), 240.0, 0.0, { 0,255,0 }, { 255,0,0 }));
+
+    ramka_biegu.zmiana_obramowki(plynna_zmiana_obramowania(AktualnyStan.getObroty(), 8000.0, 0.0, {0,255,0}, {255,0,0}));
 
     obroty_cyfrowy.zmiana_wypelnienia(plynny_alarm(AktualnyStan.getObroty(), 10000.0, 0.0, { 0,255,0 }, { 255,0,0 }, 7000.0, zegar_dla_migania));
 
@@ -379,7 +383,8 @@ void Obiekty_analogowy::warunki(Pojazd& AktualnyStan, sf::Clock& zegar_dla_migan
     obroty.zmiana_koloru_obramowki(plynna_zmiana_obramowania(AktualnyStan.getObroty(), 10000.0, 0.0, { 0,255,0 }, { 255,0,0 }));
     obramowka_rpm.zmiana_obramowki(plynny_alarm(AktualnyStan.getObroty(), 10000.0, 0.0, { 0,255,0 }, { 255,0,0 }, 7000.0, zegar_dla_migania));
 
-    obramowka_tempoleju.zmiana_obramowki(plynny_alarm(AktualnyStan.getTempoleju(), 150, 0.0, { 0,155,255 }, { 255,0,0 }, 130, zegar_dla_migania));
+    //obramowka_tempoleju.zmiana_obramowki(plynny_alarm(AktualnyStan.getTempoleju(), 150, 0.0, { 0,155,255 }, { 255,0,0 }, 130, zegar_dla_migania));
+    obramowka_tempoleju.zmiana_obramowki(alarm_temp_oleju(AktualnyStan.getTempoleju(), 130.0, 110.0, 90, zegar_dla_migania));
 }
 
 //OBIEKTY ANALOGOWE RYSOWANIE
@@ -431,12 +436,15 @@ void Obiekty_logiczne::utworzenie_obiektow() {
     analogowy.utworzenie_obiektow();
     cyfrowy.utworzenie_obiektow();
 
+    button_inf.aktualizuj_napis("Strzalka prawa - PRZYSPIESZENIE odczytywania\nStrzalka lewa - ZWOLNIENIE odczytywania\nAktualnie: ", { 130,30 }, 13, { 255,255,255,100 });
+
     //NA START ZAWSZE LADUJEMY ANALOGOWY TRYB
     Aktualny_obiekt = &analogowy;
 }
 
 void Obiekty_logiczne::warunki(Pojazd& AktualnyStan, sf::Clock& zegar_dla_migania) {
     wspolne.warunki(AktualnyStan, zegar_dla_migania);
+    button_inf.dodaj_wartosc_zmienna(wyswietlanie_odswiezanie_pliku);
     Aktualny_obiekt->warunki(AktualnyStan, zegar_dla_migania);
 }
 
@@ -492,6 +500,9 @@ void Obiekty_logiczne::rysowanie_obiektow(sf::RenderWindow& window, Pojazd& Aktu
 
         Aktualny_obiekt->rysowanie_obiektow(window, AktualnyStan, zegar_dla_migania);
 
+        button_inf.rysuj(window);
+
+
         if (czy_menu_wysuniete == false) {
             opcje.rysuj_zdj(window);
         }
@@ -506,6 +517,8 @@ void Obiekty_logiczne::rysowanie_obiektow(sf::RenderWindow& window, Pojazd& Aktu
         if (stop_klikniete == false) {
             stop_button.rysuj(window);
         }
+
+
     }
     window.display();
 }
