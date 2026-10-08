@@ -16,6 +16,7 @@
 <li>Language: C++17</li>
 <li>Graphics: SFML-3.0.2</li>
 <li>Features: Custom CSV loader, playback speed control (arrow keys), dynamic warning alerts</li>
+<li>2 dashboard layouts: analog & race digital</li>
 </ul>
 <hr>
 <h3>HOW TO RUN</h3>
